@@ -2,7 +2,7 @@
   "frame_width": 640,
   "frame_height": 480,
   "dot_size": 4,
-  "dot_rate_of_speed": 2,
+  "dot_rate": 2,
   "pulse_values": [
     "#000000",
     "#111111",

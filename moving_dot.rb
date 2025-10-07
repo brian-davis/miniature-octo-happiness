@@ -12,12 +12,12 @@ FRAME_TITLE  = "MOVING DOT"
 FRAME_CENTER_Y = FRAME_HEIGHT / 2
 FRAME_CENTER_X = FRAME_WIDTH / 2
 
-DOT_SIZE          = $config["dot_size"]
-DOT_RATE_OF_SPEED = $config["dot_rate_of_speed"]
+DOT_SIZE = $config["dot_size"]
+DOT_RATE = $config["dot_rate"]
 
 # DEBUG: correct math here?
 # Decimal values are OK, no need to DIY exact pixel placement
-DOT_DIAGONAL_RATE_OF_SPEED = Math.sqrt(2) / Math.sqrt(2 * (DOT_RATE_OF_SPEED ** 2))
+DOT_DIAGONAL_RATE_OF_SPEED = Math.sqrt(2) / Math.sqrt(2 * (DOT_RATE ** 2))
 
 MOTION_MAP = {
   "j"        => :left,
@@ -97,39 +97,39 @@ def start!
 end
 
 def toggle_stop_start
-  moving? ? stop!() : start!()
+  moving? ? stop! : start!
 end
 
 def left!
-  speed!(-DOT_RATE_OF_SPEED, 0)
+  speed!(-DOT_RATE, 0)
 end
 
 def right!
-  speed!(DOT_RATE_OF_SPEED, 0)
+  speed!(DOT_RATE, 0)
 end
 
 def up!
-  speed!(0, -DOT_RATE_OF_SPEED)
+  speed!(0, -DOT_RATE)
 end
 
 def down!
-  speed!(0, DOT_RATE_OF_SPEED)
+  speed!(0, DOT_RATE)
 end
 
 def up_left!
-  speed!(-DOT_RATE_OF_SPEED, -DOT_RATE_OF_SPEED)
+  speed!(-DOT_RATE, -DOT_RATE)
 end
 
 def up_right!
-  speed!(DOT_RATE_OF_SPEED, -DOT_RATE_OF_SPEED)
+  speed!(DOT_RATE, -DOT_RATE)
 end
 
 def down_left!
-  speed!(-DOT_RATE_OF_SPEED, DOT_RATE_OF_SPEED)
+  speed!(-DOT_RATE, DOT_RATE)
 end
 
 def down_right!
-  speed!(DOT_RATE_OF_SPEED, DOT_RATE_OF_SPEED)
+  speed!(DOT_RATE, DOT_RATE)
 end
 
 def top_edge?
@@ -246,18 +246,18 @@ Window.on :key_down do |event|
   # puts(event)
   case event.key
   when "space"
-    toggle_stop_start()
+    toggle_stop_start
   when "q"
-    exit()
-  when *MOTION_KEYS # slight performance hit vs. hard-coding
+    exit
+  when *MOTION_KEYS
     last_motion!(MOTION_MAP[event.key])
-    start!()
+    start!
   end
 end
 
 Window.update do
-  move!()
-  pulse!()
+  move!
+  pulse!
   @tick += 1
 end
 
@@ -274,4 +274,4 @@ TEXT
 
 puts welcome
 
-Window.show()
+Window.show() # launch GUI app
