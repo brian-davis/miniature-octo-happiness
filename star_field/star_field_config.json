@@ -1,0 +1,7 @@
+{
+  "window_title":   "Star Field",
+  "number_of_dots": 800,
+  "pulse_rate": 10,
+  "enable_pulse":   true,
+  "run_info":       "Press Q to quit."
+}

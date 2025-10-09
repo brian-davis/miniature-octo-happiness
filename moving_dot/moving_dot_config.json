@@ -9,5 +9,6 @@
   ],
   "pulse_rate": 10,
   "boundary_behavior": "pacman",
-  "run_info":"Welcome to moving_dot.rb. You should see a game window with a cursor point.\n\nMove the cursor using 9-key numpad, up/down/left/right arrow keys, or i/k/j/l keys.\n\nPress the space bar to start or stop.\n\nPress Q to quit.\n\n"
+  "enable_pulse": true,
+  "run_info":"Move the cursor using 9-key numpad, up/down/left/right arrow keys, or i/k/j/l keys.\n\nPress the space bar to start or stop.\n\nPress Q to quit.\n\n"
 }
