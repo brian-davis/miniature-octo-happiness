@@ -22,7 +22,8 @@ class Game
   end
 
   def run
-    run_info() and window.show() # launch GUI app
+    run_info()
+    window.show() # launch GUI app
   end
 
   private
@@ -78,7 +79,7 @@ class Game
     STDOUT.puts
     STDOUT.puts(config["run_info"]) # nil/empty OK
 
-    return window # guard
+    return true
   end
 
   ### DELEGATORS ###
