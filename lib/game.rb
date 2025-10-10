@@ -3,6 +3,8 @@
 require "ruby2d"
 require "logger"
 
+require_relative "decorators/ruby2d_decorator"
+
 # Game class is an OOP container for using Ruby2d concerns
 # in a standard way for making simple games à la Pong or Pacman.
 # Avoid putting all Ruby2d calls and/or game logic in `main` context.
@@ -58,7 +60,7 @@ class Game
     logger.info "window title:    #{window_title}"
     logger.info "window width:    #{window_width}"
     logger.info "window height:   #{window_height}"
-    logger.info "window center:   #{window_center}"
+    logger.info "window center:   #{window.center}"
   end
 
   # Default window behaviors. Decorate in subclass.
@@ -88,10 +90,6 @@ class Game
 
   def window_height
     @window_height ||= window.get(:height)
-  end
-
-  def window_center
-    @window_center ||= [(window_width / 2),(window_height / 2)]
   end
 
   def window_title

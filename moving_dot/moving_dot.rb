@@ -8,6 +8,9 @@ class Ruby2D::Square
   include Pulseable
 end
 
+# Demonstrate basic Ruby2D operation. A single cursor object, a dot, with a visual pulse effect
+# which can be moved around the window using directional keys, with configurable behavior at
+# window borders.
 class MovingDot < Game
   include DirectionalInput
   include PulseAnimation
@@ -42,13 +45,9 @@ class MovingDot < Game
   ### SET UP ###
 
   def set_dot
-    @dot = Square.new(
-      x: window_center[0],
-      y: window_center[1],
-      size: (config["dot_size"] || DEFAULT_DOT_SIZE)
-    )
-
-    @dot_size = @dot.size
+    x, y = window.center
+    @dot = Square.new(x: x, y: y)
+    @dot_size = @dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
     logger.info "dot_size:\t#{self.dot_size}"
 
     dot.pulse_values = config["pulse_values"] # Pulsable

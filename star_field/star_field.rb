@@ -2,9 +2,6 @@
 
 require "simple-random"
 
-# # REFACTOR: standard bundled gem structure
-# require_relative "../lib/game"
-
 require_relative "../lib/concerns/pulse_animation"
 require_relative "../lib/decorators/ruby2d_decorator" # random_point
 

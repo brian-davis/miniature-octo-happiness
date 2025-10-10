@@ -36,7 +36,7 @@ module DirectionalInput
 
   def self.included(base)
     def initialize(*args)
-      # if base is e.g. MovingDot, then:
+      # if base is e.g. MovingDot < GAME, then:
       # Game -> this -> MovingDot
       super(*args) # window
 
