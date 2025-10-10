@@ -12,3 +12,4 @@ class Array
     (up_half + down_half).cycle
   end
 end
+

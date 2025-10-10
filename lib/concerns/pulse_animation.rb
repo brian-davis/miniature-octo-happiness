@@ -1,4 +1,5 @@
 require_relative "../decorators/array_decorator"
+require_relative "../helpers/gradient_helper"
 
 # Add pulse/gradient functionality to an element within Game subclass.
 # Re-open and include as necessary. example (from star_field.rb):
@@ -7,24 +8,7 @@ require_relative "../decorators/array_decorator"
 # end
 module Pulseable
   DEFAULT_PULSE_RATE = 30
-  DEFAULT_PULSE_VALUES = [
-    "#000000",
-    "#111111",
-    "#222222",
-    "#333333",
-    "#444444",
-    "#555555",
-    "#666666",
-    "#777777",
-    "#888888",
-    "#999999",
-    "#aaaaaa",
-    "#bbbbbb",
-    "#cccccc",
-    "#dddddd",
-    "#eeeeee",
-    "#ffffff"
-  ]
+  DEFAULT_PULSE_VALUES = GradientHelper.simple_color_gradient("black", "white", 16)
 
   # Include into game element, e.g. Ruby2D::Square
   # Give individual elements their own pulse behaviors.
