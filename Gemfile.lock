@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ruby2d (0.12.1)
+    simple-random (1.0.3)
 
 PLATFORMS
   arm64-darwin-24
@@ -9,6 +10,7 @@ PLATFORMS
 
 DEPENDENCIES
   ruby2d
+  simple-random
 
 BUNDLED WITH
    2.7.2

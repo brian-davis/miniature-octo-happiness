@@ -15,7 +15,7 @@ config_json = JSON.load_file(config_filepath) if File.exist?(config_filepath)
 _flag, log_level = ARGV.detect { |arg| arg.match?(/--log-level/) }&.split("=")
 args = [config_json, log_level].compact
 
-moving_dot = MovingDot.new(*args)
-moving_dot.run
+star_field = StarField.new(*args) # TODO: constantize?
+star_field.run
 
-# $ ruby moving_dot_runner.rb --log-level=info
+# $ ruby star_field_runner.rb --log-level=info

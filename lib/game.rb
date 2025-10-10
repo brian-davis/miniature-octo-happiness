@@ -14,8 +14,9 @@ require "logger"
 class Game
   attr_reader :config, :logger, :window
 
-  def initialize(config, log_level = :warn)
-    @window = Ruby2D::Window # attr_reader :window
+  def initialize(config = {}, log_level = :warn)
+    @window = Ruby2D::Window # singleton
+
     set_logger(log_level)
     configure(config)
     register_inputs()
@@ -49,7 +50,7 @@ class Game
     @config = config_json # attr_reader :config
 
     window.set(
-      title:  config["window_title"],
+      title:  window_title,
       width:  config["window_width"],
       height: config["window_hieght"]
     )
@@ -57,8 +58,7 @@ class Game
     logger.info "window title:    #{window_title}"
     logger.info "window width:    #{window_width}"
     logger.info "window height:   #{window_height}"
-    logger.info "window center_x: #{window_center_x}"
-    logger.info "window center_y: #{window_center_y}"
+    logger.info "window center:   #{window_center}"
   end
 
   # Default window behaviors. Decorate in subclass.
@@ -82,25 +82,20 @@ class Game
     return true
   end
 
-  ### DELEGATORS ###
   def window_width
-    window.get(:width)
+    @window_width ||= window.get(:width)
   end
 
   def window_height
-    window.get(:height)
+    @window_height ||= window.get(:height)
   end
 
-  def window_center_x
-    window_width / 2
-  end
-
-  def window_center_y
-    window_height / 2
+  def window_center
+    @window_center ||= [(window_width / 2),(window_height / 2)]
   end
 
   def window_title
-    window.get(:title)&.strip&.upcase
+    @window_title ||= config["window_title"]&.strip&.upcase
   end
 end
 
