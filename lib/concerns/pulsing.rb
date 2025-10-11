@@ -2,30 +2,6 @@
 
 require_relative "../helpers/gradients"
 
-# Add pulse/gradient functionality to an element within Game subclass.
-# Re-open and include as necessary. example (from star_field.rb):
-# class Ruby2D::Square
-#   include Pulseable
-# end
-module Pulseable
-  DEFAULT_PULSE_RATE = 30
-
-  # Include into game element, e.g. Ruby2D::Square
-  # Give individual elements their own pulse behaviors.
-  def self.included(base)
-    attr_accessor :pulse_rate, :pulse_values
-  end
-
-  def initialize(**args)
-    super(**args)
-    self.pulse_values = Gradients.black_white # default, reset after initialization
-  end
-
-  def pulse_cycle
-    @pulse_cycle ||= self.pulse_values.gradient_cycle
-  end
-end
-
 # Add pulse/gradient functionality to a Game subclass.
 module Pulsing
   # include into Game subclass (with .window object)
@@ -36,7 +12,7 @@ module Pulsing
   MAX_TICK = 2 ** 63 - 1 # 60 cycles per second
 
   def self.included(base)
-    attr_reader :enable_pulse, :pulsing_update_callback
+    attr_reader :enable_pulse, :pulsing_update
     attr_accessor :pulse_items, :pulse_tick
 
     def initialize(*args)
@@ -47,8 +23,7 @@ module Pulsing
       logger.info {"config enable pulse: #{@enable_pulse}"}
       @pulse_tick = 0
       @pulse_items = []
-
-      @pulsing_update_callback = method(:pulse_all)
+      @pulsing_update = method(:pulse_all)
     end
   end
 

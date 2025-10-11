@@ -2,9 +2,12 @@
 
 # REFACTOR: standard bundled gem structure
 require_relative "../lib/concerns/steering" # Steering
-require_relative "../lib/concerns/pulsing"  # Pulseable, Pulsing
-require_relative "../lib/concerns/moving"   # Moveable, Moving
-require_relative "../lib/concerns/bounding" # Bounding
+require_relative "../lib/concerns/pulsing"
+require_relative "../lib/concerns/pulseable"
+require_relative "../lib/concerns/moveable"
+require_relative "../lib/concerns/moving"
+require_relative "../lib/concerns/boundable"
+require_relative "../lib/concerns/bounding"
 
 class Ruby2D::Square
   include Pulseable
@@ -19,18 +22,18 @@ class MovingDot < Game
   include Pulsing
   include Moving
   include Steering
-  include Bounding # last position
+  include Bounding # after Moving, Steering
 
   DEFAULT_DOT_SIZE = 4
 
   def initialize(*args)
     super(*args)
 
-    config_val = config["bounding_mode"].to_sym
+    config_val = config["bounding_mode"]&.to_sym
     self.bounding_mode = config_val if config_val
 
     set_dot
-    set_game_loop
+    set_update
   end
 
   private
@@ -59,8 +62,8 @@ class MovingDot < Game
     self.moving_objects.push(dot)
   end
 
+  # config["bounding_mode"] is "eliminate"x
   def game_over?
-    # config["bounding_mode"] is "eliminate"
     self.moving_objects.empty?
   end
 
@@ -70,11 +73,12 @@ class MovingDot < Game
   end
 
   # REFACTOR: move up to Game class
-  def set_game_loop
+  def set_update
     window.update do
-      self.pulsing_update_callback.call  # Pulsing
-      self.moving_update_callback.call   # Moving
-      self.bounding_update_callback.call # Bounding
+      self.pulsing_update.call  # Pulsing
+
+      self.bounding_update.call # before moving
+      self.moving_update.call
       end_game! if game_over?
     end
   end

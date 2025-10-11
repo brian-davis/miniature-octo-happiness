@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
-module Boundable
-  # assume Square
-  alias_method :bounding_coordinates, def x_y_size
-    [x, y, size]
-  end
-end
-
 module Bounding
   BOUNDING_MODES = [:unbounded, :wrap, :reflect, :stop, :eliminate]
 
   def self.included(base)
-    attr_reader :bounding_update_callback, :bounding_mode
+    attr_reader :bounding_update, :bounding_mode
     attr_accessor :edge_size
 
     def initialize(*args)
@@ -25,7 +18,7 @@ module Bounding
       end
 
       @bounding_mode = BOUNDING_MODES.first # reset after init
-      @bounding_update_callback = method(:bound_all)
+      @bounding_update = method(:bound_all)
       @edge_size = 0 # reset after init
     end
   end
@@ -41,36 +34,20 @@ module Bounding
   private
 
   def bound_all
-    # Moving dependency
     self.moving_objects.each do |obj|
-      obj_oob = out_of_bounds?(*obj.bounding_coordinates)
-      send(bounding_mode, obj, obj_oob) if obj_oob
+      edge = out_of_bounds?(*obj.bounding_coordinates)
+      # :unbounded, :wrap, :reflect, :stop, :eliminate
+      send(bounding_mode, obj, edge) if edge
     end
   end
 
   # FEATURE REQUEST: allow for differing edge behavior
   # e.g. Arkanoid top/left/right edges bouce, bottom edge eliminates
   def out_of_bounds?(x, y, s)
-    return :top_edge    if top_edge?(x, y, s)
-    return :right_edge  if right_edge?(x, y, s)
-    return :bottom_edge if bottom_edge?(x, y, s)
-    return :left_edge   if left_edge?(x, y, s)
-  end
-
-  def top_edge?(_x, y, _s)
-    y <= edge_size # size not necessary (square not centered)
-  end
-
-  def right_edge?(x, _y, s)
-    x >= window_width - s - edge_size # size necessary (square not centered)
-  end
-
-  def bottom_edge?(_x, y, s)
-    y >= window_height - s - edge_size # s necessary (square not centered)
-  end
-
-  def left_edge?(x, _y, _s)
-    x <= edge_size # _s not necessary (square not centered)
+    return :top_edge    if y <= edge_size
+    return :right_edge  if x >= window_width - s - edge_size
+    return :bottom_edge if y >= window_height - s - edge_size
+    return :left_edge   if x <= edge_size
   end
 
   # :unbounded lets you go as far as you want off-screen,
@@ -86,21 +63,21 @@ module Bounding
     logger.debug { "wrap" }
     case edge
     when :left_edge
-      obj.x = window_width - edge_size
+      obj.x = window_width - edge_size - obj.size
     when :right_edge
+      # OK
       obj.x = edge_size
     when :top_edge
-      obj.y = window_height - edge_size
+      obj.y = window_height - edge_size - obj.size
     when :bottom_edge
+      # OK
       obj.y = edge_size
     end
   end
 
-  # Bouncing behavior, accounting for strike angle, like Pong.
-  # Hit the wall going left, now you are going right.
-  def reflect(obj, edge)
-    logger.debug { "reflect" }
-    new_direction = case [obj.last_direction, edge]
+  # used by :reflect and by :stop
+  def reflection_match(obj, edge)
+    case [obj.last_direction, edge]
     in [:left, :left_edge]
       :right
     in [:right, :right_edge]
@@ -125,13 +102,25 @@ module Bounding
       :down_left
     in [:down_right, :bottom_edge]
       :up_right
+    else
+      nil
     end
-    obj.direction!(new_direction)
   end
 
-  def stop(obj, _edge)
+  # Bouncing behavior, accounting for strike angle, like Pong.
+  # Hit the wall going left, now you are going right.
+  def reflect(obj, edge)
+    logger.debug { "reflect" }
+    reflection = reflection_match(obj, edge)
+    obj.direction!(reflection) if reflection
+  end
+
+  def stop(obj, edge)
     logger.debug { "stop" }
-    obj.full_stop! # DEBUG
+    # if you hit the wall going left, stop from going further left
+    # else allow to go right
+    reflection = reflection_match(obj, edge)
+    obj.stop! if reflection
   end
 
   def eliminate(obj, _edge)
