@@ -44,7 +44,12 @@ module Steering
       # Game -> this -> MovingDot
       super(*args) # window
 
-      raise NotImplementedError, "Superclass must set @window" unless window
+      # REFACTOR:try to avoid hard dependencies
+      unless self.class.ancestors.map(&:to_s).include?("Moving") &&
+             self.window # Game
+        raise ArgumentError, "Steering depends on Moving"
+      end
+
       set_directional_inputs
     end
   end
@@ -52,10 +57,10 @@ module Steering
   private
 
   def set_directional_inputs
-    # TODO: standard game-controller style, must hold down to move,
+    # FEATURE REQUEST: option for standard game-controller style, must hold down to move,
     # stop on key_up.
     window.on :key_down do |event|
-      logger.debug event
+      logger.debug {event}
 
       case event.key
       when *STEERING_KEYS
@@ -65,12 +70,9 @@ module Steering
     end
   end
 
-  ### TEMPLATE METHODS ###
-
   def direction!
-    message = <<~TEXT
-    "Subclass must define :direction! method, which delegates methods for :left, :right, :up, :dow, :up_left, :up_right, :down_left, :down_right"
-    TEXT
-    raise NotImplementedError, message
+    self.controlled_objects.each do |obj|
+      obj.direction!(self.last_steering_input)
+    end
   end
 end

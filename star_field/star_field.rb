@@ -37,15 +37,15 @@ class StarField < Game
     min_dot_size = MIN_DOT_SIZE
     max_dot_size = config["dot_size"] || MAX_DOT_SIZE
     mode_dot_size = MIN_DOT_SIZE # DEBUG: this might not be useful
-    logger.info "max dot size:\t#{max_dot_size}"
+    logger.info {"max dot size:\t#{max_dot_size}"}
 
     rng = SimpleRandom.new
 
     dots_pulse_rate = config["pulse_rate"] # all the same
-    logger.info "config pulse rate:\t#{dots_pulse_rate}"
+    logger.info {"config pulse rate:\t#{dots_pulse_rate}"}
 
     dots_pulse_values = config["pulse_values"]
-    logger.info "config pulse values:\t#{dots_pulse_values}"
+    logger.info {"config pulse values:\t#{dots_pulse_values}"}
 
     n.times do
       dot_size = rng.triangular(min_dot_size, mode_dot_size, max_dot_size).round
@@ -76,7 +76,7 @@ class StarField < Game
 
   def set_game_loop
     window.update do
-      self.pulse_update_callback.call # Pulsing
+      self.pulsing_update_callback.call # Pulsing
     end
   end
 end

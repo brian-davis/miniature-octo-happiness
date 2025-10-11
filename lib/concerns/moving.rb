@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Add movement functionality to an element within Game subclass
 # such as a Square.
 module Moveable
@@ -5,6 +7,7 @@ module Moveable
 
   def initialize(**args)
     super(**args)
+
     @x_movement = 0
     @y_movement = 0
   end
@@ -28,8 +31,16 @@ module Moveable
     !stopped?
   end
 
+  # As if hitting a wall, no restart
+  # DEBUG: dot hits left edge, input :left, it squishes into wall and stops, input :left again, it pushes through wall as if unbounded.
+  def full_stop!
+    self.last_direction = nil
+    stop!
+  end
+
   def stop!
-    self.x_movement, self.y_movement = 0, 0
+    # self.x_movement, self.y_movement = 0, 0
+    direction!(:stop)
   end
 
   alias_method :direction!, def start!(input_direction = nil)
@@ -70,15 +81,32 @@ end
 # and tracking objects across the window, not handling keyboard input.
 module Moving
   def self.included(base)
+    attr_accessor :moving_update_callback
     attr_reader :moving_objects
   end
 
   def initialize(*args)
     super(*args)
+
     @moving_objects = []
+    @moving_update_callback = method(:move_all)
   end
 
   def controlled_objects
     @controlled_objects ||= moving_objects.select { |mo| mo.controlled }
+  end
+
+  def remove_object(obj)
+    obj.remove and # removes from display only
+    self.moving_objects.delete(obj)
+  end
+
+  private
+
+  # Animate motion across the window.
+  # Called from main loop.
+  # Simple movement, including "NPC" objects.
+  def move_all
+    self.moving_objects.each { |obj| obj.move! }
   end
 end

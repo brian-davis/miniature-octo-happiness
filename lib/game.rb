@@ -57,16 +57,16 @@ class Game
       height: config["window_hieght"]
     )
 
-    logger.info "window title:    #{window_title}"
-    logger.info "window width:    #{window_width}"
-    logger.info "window height:   #{window_height}"
-    logger.info "window center:   #{window.center}"
+    logger.info { "window title:    #{window_title}" }
+    logger.info { "window width:    #{window_width}" }
+    logger.info { "window height:   #{window_height}" }
+    logger.info { "window center:   #{window.center}" }
   end
 
   # Default window behaviors. Decorate in subclass.
   def register_inputs
     window.on :key_down do |event|
-      logger.debug event
+      logger.debug { event }
       case event.key
       when "q", "Q"
         exit()
