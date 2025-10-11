@@ -1,5 +1,4 @@
-require_relative "../decorators/array_decorator"
-require_relative "../helpers/gradient_helper"
+require_relative "../helpers/gradients"
 
 # Add pulse/gradient functionality to an element within Game subclass.
 # Re-open and include as necessary. example (from star_field.rb):
@@ -8,29 +7,25 @@ require_relative "../helpers/gradient_helper"
 # end
 module Pulseable
   DEFAULT_PULSE_RATE = 30
-  DEFAULT_PULSE_VALUES = GradientHelper.simple_color_gradient("black", "white", 16)
 
   # Include into game element, e.g. Ruby2D::Square
   # Give individual elements their own pulse behaviors.
   def self.included(base)
-    attr_reader :pulse_rate, :pulse_values
+    attr_accessor :pulse_rate, :pulse_values
   end
 
-  def pulse_rate=(rate_int)
-    @pulse_rate = rate_int || DEFAULT_PULSE_RATE
+  def initialize(**args)
+    super(**args)
+    self.pulse_values = Gradients.black_white # default, reset after initialization
   end
 
-  def pulse_values=(vals_arr)
-    @pulse_values = vals_arr || DEFAULT_PULSE_VALUES
-  end
-
-  def color_cycle
-    @color_cycle ||= pulse_values.gradient_cycle
+  def pulse_cycle
+    @pulse_cycle ||= self.pulse_values.gradient_cycle
   end
 end
 
 # Add pulse/gradient functionality to a Game subclass.
-module PulseAnimation
+module Pulsing
   # include into Game subclass (with .window object)
 
   # no Integer::MAX in newer rubies, but try to prevent memory overflow
@@ -60,9 +55,9 @@ module PulseAnimation
 
   def pulse!
     pulse_items.each do |pulse_item|
-      # e.g. Square, with .color method
       if pulse_tick % pulse_item.pulse_rate == 0
-        pulse_item.color = pulse_item.color_cycle.next
+        # e.g. Square, with .color method
+        pulse_item.color = pulse_item.pulse_cycle.next
       end
     end
 

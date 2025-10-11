@@ -2,8 +2,8 @@
 
 require "simple-random"
 
-require_relative "../lib/concerns/pulse_animation"
-require_relative "../lib/decorators/ruby2d_decorator" # random_point
+require_relative "../lib/concerns/pulsing"            # Pulseable, Pulsing
+require_relative "../lib/decorators/ruby2d_decorator" # window.random_point
 
 class Ruby2D::Square
   include Pulseable
@@ -15,7 +15,7 @@ end
 # size and shade of the dots. Set very low pulse_rate value for glittery,
 # Star Trek teleporter effect.
 class StarField < Game
-  include PulseAnimation
+  include Pulsing
 
   MAX_DOT_SIZE = 3
   MIN_DOT_SIZE = 1
@@ -24,6 +24,7 @@ class StarField < Game
   def initialize(*args)
     super(*args)
     set_dots
+    set_game_loop
   end
 
   private
@@ -55,19 +56,27 @@ class StarField < Game
         size: dot_size
       )
 
-      dot.pulse_rate = dots_pulse_rate
+      # dot.pulse_rate = 2 # DEBUG
+      # dot.pulse_values = Gradients.random_color_gradient # DEBUG
 
+      dot.pulse_rate = dots_pulse_rate
       # give each dot a unique subset of the pulse values
-      dot.pulse_values = dots_pulse_values # uses default
+      dot.pulse_values = dots_pulse_values if dots_pulse_values # uses default if nil
       pulse_values_length = rand(dot.pulse_values.length)
       pulse_values_offset = rand(dot.pulse_values.length - pulse_values_length)
       pulse_values_end    = pulse_values_offset + pulse_values_length
       dot.pulse_values = dot.pulse_values[pulse_values_offset..pulse_values_end]
 
-      rand(10).times { dot.color_cycle.next }
-      dot.color = dot.color_cycle.next
+      rand(10).times { dot.pulse_cycle.next }
+      dot.color = dot.pulse_cycle.next
 
       pulse_items.push(dot)
+    end
+  end
+
+  def set_game_loop
+    window.update do
+      self.pulse_update_callback.call # Pulsing
     end
   end
 end

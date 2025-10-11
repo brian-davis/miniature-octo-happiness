@@ -1,5 +1,20 @@
+class Array
+  # Convert an array into a cycle object which will not
+  # make a jarring leap from last place to first place,
+  # or have a doubling effect at the extremes.
+  # e.g.
+  # [1,2,3,4] => (1,2,3,4,3,2,1,2,3,4,3,2 ...)
+  def gradient_cycle
+    return nil if empty?
+    up_half = self.dup
+    down_half = up_half[1...-1].reverse
+    (up_half + down_half).cycle
+  end
+end
+
+
 # Easily built color gradient array values to feed into Pulseable
-module GradientHelper
+module Gradients
   # https://htmlcolorcodes.com/
   COMMON_COLOR_CODES = {
     "white"   => "#ffffff",
@@ -21,9 +36,9 @@ module GradientHelper
   }
 
   class << self
-    # >> GradientHelper.int_gradient(20, 5,4)
+    # >> Gradiens.int_gradient(20, 5,4)
     # => [20, 15, 10, 5]
-    # >> GradientHelper.int_gradient(10, 100)
+    # >> Gradiens.int_gradient(10, 100)
     # => [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     def int_gradient(a, b, n = 10)
       a, b = a.to_i, b.to_i
@@ -37,7 +52,7 @@ module GradientHelper
       inermediate_range = ((a + step_size)..(b - step_size))
       intermediate = inermediate_range.step(step_size).to_a
 
-      # kludge e.g. GradientHelper.int_gradient(5, 20,9)
+      # kludge e.g. Gradiens.int_gradient(5, 20,9)
       # step_size is 1, get too-long result
       until intermediate.length <= n - 2
         intermediate.delete_at(rand(intermediate.length))
@@ -104,6 +119,10 @@ module GradientHelper
       options.delete("black") unless include_black
       aval, bval = options.values.sample(2)
       color_hex_gradient(aval, bval, size)
+    end
+
+    def black_white
+      @black_white ||= simple_color_gradient("black", "white", 16)
     end
   end
 end
