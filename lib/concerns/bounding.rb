@@ -8,7 +8,6 @@ module Boundable
 end
 
 module Bounding
-  # REFACTOR: break out boundary and/or collision logic into separate module(s)
   BOUNDING_MODES = [:unbounded, :wrap, :reflect, :stop, :eliminate]
 
   def self.included(base)
@@ -101,44 +100,33 @@ module Bounding
   # Hit the wall going left, now you are going right.
   def reflect(obj, edge)
     logger.debug { "reflect" }
-
-    # REFACTOR
-    new_motion = case obj.last_direction
-    when :left
+    new_direction = case [obj.last_direction, edge]
+    in [:left, :left_edge]
       :right
-    when :right
+    in [:right, :right_edge]
       :left
-    when :up
+    in [:up, :top_edge]
       :down
-    when :down
+    in [:down, :bottom_edge]
       :up
-    when :up_left
-      if edge == :left_edge
-        :up_right
-      elsif edge == :top_edge
-        :down_left
-      end
-    when :up_right
-      if edge == :right_edge
-        :up_left
-      elsif edge == :top_edge
-        :down_right
-      end
-    when :down_left
-      if edge == :left_edge
-        :down_right
-      elsif edge == :bottom_edge
-        :up_left
-      end
-    when :down_right
-      if edge == :right_edge
-        :down_left
-      elsif edge == :bottom_edge
-        :up_right
-      end
+    in [:up_left, :left_edge]
+      :up_right
+    in [:up_left, :top_edge]
+      :down_left
+    in [:up_right, :right_edge]
+      :up_left
+    in [:up_right, :top_edge]
+      :down_right
+    in [:down_left, :left_edge]
+      :down_right
+    in [:down_left, :bottom_edge]
+      :up_left
+    in [:down_right, :right_edge]
+      :down_left
+    in [:down_right, :bottom_edge]
+      :up_right
     end
-
-    obj.direction!(new_motion)
+    obj.direction!(new_direction)
   end
 
   def stop(obj, _edge)
