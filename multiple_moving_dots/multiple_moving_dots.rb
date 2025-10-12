@@ -16,9 +16,8 @@ class Ruby2D::Square
   include Boundable
 end
 
-# Demonstrate basic Ruby2D operation. A single cursor object,
-# a dot, with a visual pulse effect which can be moved around the window
-# using directional keys, with configurable behavior at window borders.
+# Demonstrate basic Ruby2D operation. Animate many cursor objects,
+# dots, each with its own visual pulse effect, movement and boundary behavior.
 class MultipleMovingDots < Game
   include Pulsing
   include Moving

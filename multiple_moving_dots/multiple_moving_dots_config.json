@@ -8,5 +8,5 @@
   "pulse_rate": 10,
   "bounding_mode": "reflect",
   "enable_pulse": true,
-  "run_info":"Press Q to quit.\n\n"
+  "run_info":"No Steering is available here, it is merely an animation. Press Q to quit.\n\n"
 }
