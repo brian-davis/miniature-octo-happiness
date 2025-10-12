@@ -8,29 +8,30 @@ module Colliding
     # :collide_physics # FEATURE REQUEST
   ]
 
-  def self.included(base)
-    attr_reader :colliding_update
-    attr_accessor :colliding_mode
+  # def self.included(base)
+  # end
 
-    def initialize(*args)
-      super(*args)
+  attr_reader :colliding_update
+  attr_accessor :colliding_mode
 
-      # REFACTOR:try to avoid hard dependencies
-      unless self.class.ancestors.map(&:to_s).include?("Moving") &&
-             self.class.ancestors.map(&:to_s).include?("Bounding") &&
-             self.window # Game
-        raise ArgumentError, "Colliding depends on Moving and Bounding"
-      end
-      @colliding_mode = COLLIDING_MODES.first # reset after init
-      @colliding_update = method(:collide_all)
+  def initialize(*args)
+    super(*args)
+
+    # REFACTOR:try to avoid hard dependencies
+    unless self.class.ancestors.map(&:to_s).include?("Moving") &&
+            self.class.ancestors.map(&:to_s).include?("Bounding") &&
+            self.window # Game
+      raise ArgumentError, "Colliding depends on Moving and Bounding"
     end
+    @colliding_mode = COLLIDING_MODES.first # reset after init
+    @colliding_update = method(:collide_all)
   end
 
   private
 
+  # IMPROVE: add block objects here?
   def collision_candidates(obj)
-    r = self.moving_objects
-          .reject { |mo| mo.equal?(obj) }
+    self.moving_objects.reject { |mo| mo.equal?(obj) } # Moving
   end
 
   def collide_all

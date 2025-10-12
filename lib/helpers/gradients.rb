@@ -87,23 +87,9 @@ module Gradients
       r_a, g_a, b_a = to_i16.(color_a)
       r_b, g_b, b_b = to_i16.(color_b)
 
-      # puts "r_a: #{r_a.inspect}"
-      # puts "g_a: #{g_a.inspect}"
-      # puts "b_a: #{b_a.inspect}"
-      # puts
-      # puts "r_b: #{r_b.inspect}"
-      # puts "g_b: #{g_b.inspect}"
-      # puts "b_b: #{b_b.inspect}"
-      # puts
-
       r_grad = to_hex_gradient.(r_a, r_b, size)
       g_grad = to_hex_gradient.(g_a, g_b, size)
       b_grad = to_hex_gradient.(b_a, b_b, size)
-
-      # puts "r_grad: #{r_grad.inspect}"
-      # puts "g_grad: #{g_grad.inspect}"
-      # puts "b_grad: #{b_grad.inspect}"
-      # puts
 
       r_grad.zip(g_grad, b_grad).map { |hex_tuples| "#" + hex_tuples.join  }
     end

@@ -18,7 +18,6 @@ class Ruby2D::Square
 
   include Moveable
   include Collidable
-  include Boundable
 end
 
 # Demonstrate basic Ruby2D operation. Animate many cursor objects,

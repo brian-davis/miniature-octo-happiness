@@ -43,11 +43,8 @@ module Bounding
 
   # FEATURE REQUEST: allow for differing edge behavior
   # e.g. Arkanoid top/left/right edges bouce, bottom edge eliminates
-
-  # FEATURE REQUEST: allow for obstacles within the window, not only absolute edge of screen.
-  # e.g. Pacman maze-walls
   def out_of_bounds?(obj)
-    top_left, bottom_right = obj.xy_coverage_movement_adjusted # Collidable
+    top_left, bottom_right = obj.xy_coverage # Collidable
 
     return :top_edge    if top_left[1] <= edge_size
     return :right_edge  if bottom_right[0] >= window_width - edge_size

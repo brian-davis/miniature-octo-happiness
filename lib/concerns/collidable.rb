@@ -13,15 +13,17 @@ module Collidable
   end
 
   # The window-coordinates real-estate for the object
-  def xy_coverage
+  def static_xy_coverage
     [
       [xi, yi], # top-left corner
       [(xi + size), (yi + size)], # bottom-right corner
     ]
   end
 
-  # look ahead 1 frame
-  def xy_coverage_movement_adjusted
+  def xy_coverage
+    return static_xy_coverage if stopped? # moveable.rb
+
+    # if moving, look ahead 1 frame
     case last_direction
     when :up
       [
@@ -64,13 +66,13 @@ module Collidable
         [(xi + rate + size), (yi + rate + size)], # bottom-right corner
       ]
     else
-      xy_coverage
+      static_xy_coverage
     end
   end
 
   def collides?(other)
-    self_cov = self.xy_coverage_movement_adjusted
-    other_cov = other.xy_coverage_movement_adjusted
+    self_cov = self.xy_coverage
+    other_cov = other.xy_coverage # duck-typing in blockable.rb
 
     self_x = (self_cov[0][0]..self_cov[1][0])
     self_y = (self_cov[0][1]..self_cov[1][1])
