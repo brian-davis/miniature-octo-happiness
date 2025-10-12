@@ -23,7 +23,7 @@ end
 
 # Demonstrate basic Ruby2D operation. Animate many cursor objects,
 # dots, each with its own visual pulse effect, movement and boundary behavior.
-class MultipleMovingDots < Game
+class Collisions < Game
   include Pulsing
 
   include Moving
@@ -36,8 +36,11 @@ class MultipleMovingDots < Game
   def initialize(*args)
     super(*args)
 
-    config_val = config["bounding_mode"]&.to_sym
-    self.bounding_mode = config_val if config_val
+    config_val1 = config["bounding_mode"]&.to_sym
+    self.bounding_mode = config_val1 if config_val1
+
+    config_val2 = config["colliding_mode"]&.to_sym
+    self.colliding_mode = config_val2 if config_val2
 
     set_dots
     set_update
@@ -49,11 +52,12 @@ class MultipleMovingDots < Game
     number_of_dots = config["number_of_dots"] || DEFAULT_DOTS
 
     number_of_dots.times do
-      x, y = window.random_point
-      dot = Square.new(x: x, y: y)
+      dot_size = config["dot_size"] || DEFAULT_DOT_SIZE
+      logger.info {"dot_size:\t#{dot_size}"}
 
-      dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
-      logger.info {"dot_size:\t#{@dot_size}"}
+      x, y = window.random_point(dot_size)
+      dot = Square.new(x: x, y: y)
+      dot.size = dot_size
 
       cpv = config["pulse_values"]
       dot.pulse_values = if cpv.nil? || cpv.empty?
@@ -93,7 +97,11 @@ class MultipleMovingDots < Game
       self.pulsing_update.call  # Pulsing
 
       self.bounding_update.call # before moving
+
+      self.colliding_update.call
+
       self.moving_update.call
+
       end_game! if game_over?
     end
   end

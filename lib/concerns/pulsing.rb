@@ -30,6 +30,7 @@ module Pulsing
   private
 
   def pulse_all
+    return unless enable_pulse
     pulse_items.each do |pulse_item|
       if pulse_tick % pulse_item.pulse_rate == 0
         # e.g. Square, with .color method

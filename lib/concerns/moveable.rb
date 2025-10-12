@@ -2,6 +2,8 @@
 
 # Add movement functionality to an element within Game subclass
 # such as a Square.
+#
+# Movable spelling?
 module Moveable
   attr_accessor :x_movement, :y_movement, :last_direction,  :controlled, :rate
 
@@ -49,16 +51,24 @@ module Moveable
     direction!(:stop)
   end
 
-  alias_method :direction!, def start!(input_direction = nil)
+  alias_method :direction!, def start!(input_direction = nil, tag = nil)
+    # puts "direction! last_direction: #{last_direction}; input_direction: #{input_direction}"
+
+    # puts tag if tag
+
     new_direction = if input_direction == :toggle_start
       stopped? ? self.last_direction : :stop
     else
       input_direction
     end
-    x, y = directional_movement[new_direction]
-    return unless x && y
+
+    # puts new_direction
+
+    new_x, new_y = directional_movement[new_direction]
+
+    return unless new_x && new_y
     self.last_direction = new_direction unless new_direction == :stop
-    self.x_movement, self.y_movement = x, y
+    self.x_movement, self.y_movement = new_x, new_y
   end
 
   private

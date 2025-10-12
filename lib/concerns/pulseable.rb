@@ -7,6 +7,8 @@ require_relative "../helpers/gradients"
 # class Ruby2D::Square
 #   include Pulseable
 # end
+#
+# Pulsable spelling?
 module Pulseable
   DEFAULT_PULSE_RATE = 30
 

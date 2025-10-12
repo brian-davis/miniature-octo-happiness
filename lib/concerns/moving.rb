@@ -21,6 +21,7 @@ module Moving
   end
 
   def remove_object(obj)
+    logger.debug { "remove_object: #{obj}" }
     obj.remove and # removes from display only
     self.moving_objects.delete(obj)
   end

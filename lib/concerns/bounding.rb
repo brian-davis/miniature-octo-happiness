@@ -12,8 +12,9 @@ module Bounding
 
       # REFACTOR:try to avoid hard dependencies
       unless self.class.ancestors.map(&:to_s).include?("Moving") &&
+             self.class.ancestors.map(&:to_s).include?("Colliding") &&
              self.window # Game
-        raise ArgumentError, "Bounding depends on Moving and Steering"
+        raise ArgumentError, "Bounding depends on Moving and Colliding"
       end
 
       @bounding_mode = BOUNDING_MODES.first # reset after init
@@ -34,7 +35,7 @@ module Bounding
 
   def bound_all
     self.moving_objects.each do |obj|
-      edge = out_of_bounds?(*obj.bounding_coordinates)
+      edge = out_of_bounds?(obj)
       # :unbounded, :wrap, :reflect, :stop, :eliminate
       send(bounding_mode, obj, edge) if edge
     end
@@ -42,11 +43,16 @@ module Bounding
 
   # FEATURE REQUEST: allow for differing edge behavior
   # e.g. Arkanoid top/left/right edges bouce, bottom edge eliminates
-  def out_of_bounds?(x, y, s)
-    return :top_edge    if y <= edge_size
-    return :right_edge  if x >= window_width - s - edge_size
-    return :bottom_edge if y >= window_height - s - edge_size
-    return :left_edge   if x <= edge_size
+
+  # FEATURE REQUEST: allow for obstacles within the window, not only absolute edge of screen.
+  # e.g. Pacman maze-walls
+  def out_of_bounds?(obj)
+    top_left, bottom_right = obj.xy_coverage_movement_adjusted # Collidable
+
+    return :top_edge    if top_left[1] <= edge_size
+    return :right_edge  if bottom_right[0] >= window_width - edge_size
+    return :bottom_edge if bottom_right[1] >= window_height - edge_size
+    return :left_edge   if top_left[0] <= edge_size
   end
 
   # :unbounded lets you go as far as you want off-screen,
@@ -109,7 +115,7 @@ module Bounding
   # Bouncing behavior, accounting for strike angle, like Pong.
   # Hit the wall going left, now you are going right.
   def reflect(obj, edge)
-    logger.debug { "reflect" }
+    # logger.debug { "reflect" }
     reflection = reflection_match(obj, edge)
     obj.direction!(reflection) if reflection
   end
@@ -124,6 +130,6 @@ module Bounding
 
   def eliminate(obj, _edge)
     logger.debug { "eliminate" }
-    remove_object(obj)
+    remove_object(obj) # Moving
   end
 end
