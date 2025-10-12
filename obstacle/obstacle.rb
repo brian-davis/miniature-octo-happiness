@@ -5,7 +5,7 @@
 require_relative "../lib/concerns/pulsing"
 require_relative "../lib/concerns/pulseable"
 
-require_relative "../lib/concerns/steering" # Steering
+require_relative "../lib/concerns/steering"
 
 require_relative "../lib/concerns/moveable"
 require_relative "../lib/concerns/moving"
@@ -33,6 +33,7 @@ end
 # Demonstrate basic Ruby2D operation. A single cursor object,
 # a dot, with a visual pulse effect which can be moved around the window
 # using directional keys, with configurable behavior at window borders.
+# A wall object in in the middle of the map, blocking some movements.
 class Obstacle < Game
   include Pulsing
   include Steering
@@ -52,9 +53,7 @@ class Obstacle < Game
     self.bounding_mode = config_val if config_val
 
     set_dot
-
     set_obstacle
-
     set_update
   end
 
@@ -84,7 +83,6 @@ class Obstacle < Game
     self.moving_objects.push(@dot)
   end
 
-  # TODO
   def set_obstacle
     @wall = Rectangle.new(
       x: @dot.x - 100,
@@ -114,7 +112,7 @@ class Obstacle < Game
     self.blocks.push(@wall)
   end
 
-  # config["bounding_mode"] is "eliminate"x
+  # If config["bounding_mode"] is "eliminate"
   def game_over?
     self.moving_objects.empty?
   end
@@ -124,7 +122,7 @@ class Obstacle < Game
     exit
   end
 
-  # REFACTOR: move up to Game class
+  # REFACTOR: move up to Game superclass?
   def set_update
     window.update do
       self.pulsing_update.call  # Pulsing

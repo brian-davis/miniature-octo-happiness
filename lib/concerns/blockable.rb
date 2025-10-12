@@ -20,9 +20,4 @@ module Blockable
       [(x + width), (y + height)], # bottom-right corner
     ]
   end
-
-  # also in blockable.rb
-  def collision_coverage_method
-    method(:xy_coverage_movement)
-  end
 end

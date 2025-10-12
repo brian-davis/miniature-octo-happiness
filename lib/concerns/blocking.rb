@@ -122,8 +122,6 @@ module Blocking
 
     logger.debug { "last_direction: #{obj.last_direction}; edge: #{edge}" }
 
-    # raise "debug"
-
     ### 12 possible angles: 3 angles (negative-straight-positive) * 4 edges
 
     reflection = if obj.last_direction == :down && edge == :top_edge
