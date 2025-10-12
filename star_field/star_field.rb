@@ -3,6 +3,7 @@
 require "simple-random"
 
 require_relative "../lib/concerns/pulsing"            # Pulseable, Pulsing
+require_relative "../lib/concerns/pulseable"
 require_relative "../lib/decorators/ruby2d_decorator" # window.random_point
 
 class Ruby2D::Square
@@ -24,7 +25,7 @@ class StarField < Game
   def initialize(*args)
     super(*args)
     set_dots
-    set_game_loop
+    set_update
   end
 
   private
@@ -36,7 +37,7 @@ class StarField < Game
 
     min_dot_size = MIN_DOT_SIZE
     max_dot_size = config["dot_size"] || MAX_DOT_SIZE
-    mode_dot_size = MIN_DOT_SIZE # DEBUG: this might not be useful
+    mode_dot_size = MIN_DOT_SIZE
     logger.info {"max dot size:\t#{max_dot_size}"}
 
     rng = SimpleRandom.new
@@ -74,9 +75,9 @@ class StarField < Game
     end
   end
 
-  def set_game_loop
+  def set_update
     window.update do
-      self.pulsing_update_callback.call # Pulsing
+      self.pulsing_update.call # Pulsing
     end
   end
 end

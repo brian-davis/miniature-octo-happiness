@@ -12,7 +12,6 @@ module Bounding
 
       # REFACTOR:try to avoid hard dependencies
       unless self.class.ancestors.map(&:to_s).include?("Moving") &&
-             self.class.ancestors.map(&:to_s).include?("Steering") &&
              self.window # Game
         raise ArgumentError, "Bounding depends on Moving and Steering"
       end

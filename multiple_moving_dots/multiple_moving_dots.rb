@@ -1,111 +1,94 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
-# # REFACTOR: standard bundled gem structure
-# require_relative "../lib/concerns/directional_input"
-# require_relative "../lib/concerns/pulse_animation"
+# REFACTOR: standard bundled gem structure
+require_relative "../lib/concerns/pulseable"
+require_relative "../lib/concerns/pulsing"
 
-# class Ruby2D::Square
-#   include Pulseable
-# end
+require_relative "../lib/concerns/moveable"
+require_relative "../lib/concerns/moving"
 
-# # Demonstrate basic Ruby2D operation. A single cursor object, a dot, with a visual pulse effect
-# # which can be moved around the window using directional keys, with configurable behavior at
-# # window borders.
-# class MultipleMovingDots < Game
-#   include DirectionalInput
-#   include PulseAnimation
+require_relative "../lib/concerns/boundable"
+require_relative "../lib/concerns/bounding"
 
-#   DEFAULT_BOUNDARY_BEHAVIOR = "pong"
-#   DEFAULT_DOT_RATE = 2
-#   DEFAULT_DOT_SIZE = 4
-#   DEFAULT_DOTS = 2
+class Ruby2D::Square
+  include Pulseable
+  include Moveable
+  include Boundable
+end
 
-#   # REFACTOR: break out boundary and/or collision logic into separate module(s)
-#   BOUNDARY_BEHAVIORS = ["pacman", "pong", "stop", "unbounded"]
+# Demonstrate basic Ruby2D operation. A single cursor object,
+# a dot, with a visual pulse effect which can be moved around the window
+# using directional keys, with configurable behavior at window borders.
+class MultipleMovingDots < Game
+  include Pulsing
+  include Moving
+  include Bounding # after Moving
 
-#   attr_reader :dots, :dot_size, :straight_rate, :diagonal_rate, :boundary_behavior
-#   attr_accessor :x_speed, :y_speed
+  DEFAULT_DOTS = 2
+  DEFAULT_DOT_SIZE = 4
 
-#   def initialize(*args)
-#     super(*args)
+  def initialize(*args)
+    super(*args)
 
-#     # state machine
-#     @x_speed = 0
-#     @y_speed = 0
+    config_val = config["bounding_mode"]&.to_sym
+    self.bounding_mode = config_val if config_val
 
-#     set_dots
-#     set_motion
-#     set_boundary_behavior
-#     set_game_loop
-#   end
+    set_dots
+    set_update
+  end
 
-#   private
+  private
 
-#   ### SET UP ###
+  def set_dots
+    number_of_dots = config["number_of_dots"] || DEFAULT_DOTS
 
-#   def set_dots
-#     @dots = []
-#     n = config["number_of_dots"] || DEFAULT_DOTS
-#     dot_size = config["dot_size"] || DEFAULT_DOT_SIZE # same for all
-#     logger.info {"dot_size:\t#{self.dot_size}"}
-#     dot_pulse_rate = config["pulse_rate"]
+    number_of_dots.times do
+      x, y = window.random_point
+      dot = Square.new(x: x, y: y)
 
-#     n.times do
-#       x, y = window.random_point
-#       dot = Square.new(x: x, y: y)
-#       dot.size = dot_size
-#       dot.pulse_rate = dot_pulse_rate
+      dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
+      logger.info {"dot_size:\t#{@dot_size}"}
 
-#       dot.pulse_values = GradientHelper.random_color_gradient
-#       dot.color = dot.color_cycle.next
+      cpv = config["pulse_values"]
+      dot.pulse_values = if cpv.nil? || cpv.empty?
+        Gradients.random_color_gradient
+      else
+        cpv
+      end
 
-#       self.pulse_items.push(dot) # pulse
-#       self.dots.push(dot) # move!
-#     end
-#   end
+      dot.pulse_rate = config["pulse_rate"]
+      dot.color = dot.pulse_cycle.next
+      self.pulse_items.push(dot)
 
-#   def set_motion
-#     # Motion u/d/l/r
-#     @straight_rate = config["dot_rate"] || DEFAULT_DOT_RATE
-#     logger.info "straight_rate:\t#{straight_rate}"
+      dot.rate = config["dot_rate"]
+      dot.controlled = true
 
-#     # Motion ul/ur/dl/dr
-#     calc = straight_rate - (
-#       1 / Math.sqrt(2 * (straight_rate ** 2))
-#     ) # DEBUG: correct math?
+      launch_dir = Moveable.valid_directions.sample
+      dot.start!(launch_dir)
 
-#     @diagonal_rate = calc
-#     logger.info {"diagonal_rate:\t#{diagonal_rate}"}
-#   end
+      self.moving_objects.push(dot)
+    end
+  end
 
-#   def set_boundary_behavior
-#     @boundary_behavior = begin
-#       config_val = config["boundary_behavior"] || DEFAULT_BOUNDARY_BEHAVIOR
+  # config["bounding_mode"] is "eliminate"
+  #
+  def game_over?
+    self.moving_objects.empty?
+  end
 
-#       if BOUNDARY_BEHAVIORS.include?(config_val)
-#         logger.info {"boundary_behavior:\t#{config_val}"}
-#         config_val
-#       else
-#         logger.error {
-#           "boundary_behavior configuration:\t Bad value. Valid options: # {BOUNDARY_BEHAVIORS.join(', ')}"
-#         }
+  def end_game!
+    puts "GAME OVER"
+    exit
+  end
 
-#         DEFAULT_BOUNDARY_BEHAVIOR
-#       end
-#     end
-#   end
+  # REFACTOR: move up to Game class
+  def set_update
+    window.update do
+      self.pulsing_update.call  # Pulsing
 
-#   def set_game_loop
-#     window.update do
-#       self.pulse_update_callback.call # PulseAnimation
-#       move!
-#     end
-#   end
-
-
-#   # Animate motion of dot across the window.
-#   # Called from main loop.
-#   def move!
-#     # TODO
-#   end
-# end
+      self.bounding_update.call # before moving
+      self.moving_update.call
+      end_game! if game_over?
+    end
+  end
+end

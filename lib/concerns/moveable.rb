@@ -5,6 +5,20 @@
 module Moveable
   attr_accessor :x_movement, :y_movement, :last_direction,  :controlled, :rate
 
+  # FEATURE REQUEST: Develop alternate system based on radial heading degrees.
+  VALID_DIRECTIONS = [
+    :left, :right, :up, :down,
+    :up_left, :up_right, :down_left, :down_right,
+    :stop
+  ]
+  def self.valid_directions(include_stop = false)
+    if include_stop
+      VALID_DIRECTIONS
+    else
+      VALID_DIRECTIONS - [:stop]
+    end
+  end
+
   def initialize(**args)
     super(**args)
 
@@ -47,12 +61,12 @@ module Moveable
     self.x_movement, self.y_movement = x, y
   end
 
- private
+  private
 
   def directional_movement
     @directional_movement ||= begin
       raise ArgumentError, "rate has not been set" unless rate
-      {
+      direction_key = {
         left:       [-rate, 0],
         right:      [rate,  0],
         up:         [0,              -rate],

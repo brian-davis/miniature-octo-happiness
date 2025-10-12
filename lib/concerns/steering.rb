@@ -60,7 +60,7 @@ module Steering
     # FEATURE REQUEST: option for standard game-controller style, must hold down to move,
     # stop on key_up.
     window.on :key_down do |event|
-      logger.debug {event}
+      logger.debug { event }
 
       case event.key
       when *STEERING_KEYS
@@ -72,7 +72,7 @@ module Steering
 
   def direction!
     self.controlled_objects.each do |obj|
-      obj.direction!(self.last_steering_input)
+      obj.direction!(self.last_steering_input) # Moving
     end
   end
 end
