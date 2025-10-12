@@ -100,21 +100,7 @@ module Collidable
 
   def collision_reposition!(a, b)
     # DEBUG: currently disabled, not necessary. Enable as necessary
-    # or as a deliberate effect, like a Mario-style injury (big mario shrinks)
-    # or Castlevania-style injury (Simon is thrown back, actually exploitable)
-    if false
-      left, right = [a, b].minmax { |obj| obj.x }
-      top, bottom = [a, b].minmax { |obj| obj.y }
-
-      until (left.x + left.size + 1) < right.x
-        left.x = left.x.round -1
-        right.x = right.x.round + 1
-      end
-
-      until (top.y + top.size + 1) < bottom.y
-        top.y = top.y.round - 1
-        bottom.y = bottom.y.round + 1
-      end
-    end
+    # or as a deliberate effect, like Castlevania (Simon is thrown back, actually exploitable)
+    return
   end
 end

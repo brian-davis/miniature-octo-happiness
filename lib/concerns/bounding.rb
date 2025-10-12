@@ -115,7 +115,7 @@ module Bounding
   # Bouncing behavior, accounting for strike angle, like Pong.
   # Hit the wall going left, now you are going right.
   def reflect(obj, edge)
-    # logger.debug { "reflect" }
+    logger.debug { "reflect" }
     reflection = reflection_match(obj, edge)
     obj.direction!(reflection) if reflection
   end

@@ -52,20 +52,12 @@ module Moveable
   end
 
   alias_method :direction!, def start!(input_direction = nil, tag = nil)
-    # puts "direction! last_direction: #{last_direction}; input_direction: #{input_direction}"
-
-    # puts tag if tag
-
     new_direction = if input_direction == :toggle_start
       stopped? ? self.last_direction : :stop
     else
       input_direction
     end
-
-    # puts new_direction
-
     new_x, new_y = directional_movement[new_direction]
-
     return unless new_x && new_y
     self.last_direction = new_direction unless new_direction == :stop
     self.x_movement, self.y_movement = new_x, new_y

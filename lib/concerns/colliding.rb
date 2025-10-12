@@ -2,7 +2,7 @@
 
 module Colliding
   COLLIDING_MODES = [
-    :collide_reflect, # TODO
+    :collide_reflect,
     :collide_stop,
     :collide_eliminate
     # :collide_physics # FEATURE REQUEST
@@ -58,6 +58,7 @@ module Colliding
     obj1.collide_stop!(obj2)
   end
 
+  # simple bounce effect
   def collide_reflect(obj1, obj2)
     logger.debug { "collide_reflect" }
     obj1.collide_reflect!(obj2)
