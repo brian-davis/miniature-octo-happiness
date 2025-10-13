@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-class Ruby2D::Square
-  include Pulseable
-
-  include Moveable
-  include Collidable
-end
-
 # Demonstrate basic Ruby2D operation. Animate many cursor objects,
 # dots, each with its own visual pulse effect, movement and boundary behavior.
 class Collisions < Game
@@ -42,7 +35,7 @@ class Collisions < Game
       logger.info {"dot_size:\t#{dot_size}"}
 
       x, y = window.random_point(dot_size)
-      dot = Square.new(x: x, y: y)
+      dot = Npc.new(x: x, y: y)
       dot.size = dot_size
 
       cpv = config["pulse_values"]

@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-require "simple-random"
-
-class Ruby2D::Square
-  include Pulseable
-end
-
 # Produce a field of twinkling stars.
 # Pulse effect simulates atmospheric distortion. Disable for outer-space view.
 # Even when disabled, there is an optical illusion effect from different
@@ -47,7 +41,7 @@ class StarField < Game
     n.times do
       dot_size = rng.triangular(min_dot_size, mode_dot_size, max_dot_size).round
       x, y = window.random_point
-      dot = Ruby2D::Square.new(
+      dot = Background.new(
         x: x,
         y: y,
         size: dot_size

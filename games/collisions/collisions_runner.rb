@@ -2,7 +2,6 @@
 
 require "json"
 
-# REFACTOR: standard bundled gem structure
 require_relative "../../lib/game"
 
 self_filename = __FILE__.split('/').last.split('.').first

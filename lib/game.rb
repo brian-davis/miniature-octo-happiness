@@ -3,7 +3,18 @@
 require "ruby2d"
 require "logger"
 
-require_relative "decorators/ruby2d_decorator"
+### Master requirements. Assume everything is always loaded. ###
+
+# Decorators
+
+require_relative "../lib/decorators/ruby2d_decorator"
+
+# Helpers
+
+require "simple-random"
+require_relative "../lib/helpers/gradients.rb"
+
+# Concerns
 
 require_relative "../lib/concerns/pulsing"
 require_relative "../lib/concerns/pulseable"
@@ -21,6 +32,17 @@ require_relative "../lib/concerns/bounding"
 
 require_relative "../lib/concerns/blockable"
 require_relative "../lib/concerns/blocking"
+
+# Components
+
+require_relative "../lib/components/npc"
+require_relative "../lib/components/pc"
+require_relative "../lib/components/wall"
+require_relative "../lib/components/background"
+
+### Module ###
+
+# REFACTOR: standard bundled gem structure
 
 # Game class is an OOP container for using Ruby2d concerns
 # in a standard way for making simple games à la Pong or Pacman.

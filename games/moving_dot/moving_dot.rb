@@ -1,14 +1,5 @@
 # frozen_string_literal: true
 
-# REFACTOR: standard bundled gem structure
-
-class Ruby2D::Square
-  include Pulseable
-
-  include Moveable
-  include Collidable
-end
-
 # Demonstrate basic Ruby2D operation. A single cursor object,
 # a dot, with a visual pulse effect which can be moved around the window
 # using directional keys, with configurable behavior at window borders.
@@ -36,7 +27,7 @@ class MovingDot < Game
 
   def set_dot
     x, y = window.center
-    dot = Square.new(x: x, y: y)
+    dot = Pc.new(x: x, y: y)
 
     dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
     logger.info {"dot_size:\t#{@dot_size}"}
