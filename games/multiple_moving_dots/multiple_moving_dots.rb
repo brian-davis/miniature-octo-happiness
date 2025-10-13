@@ -29,7 +29,7 @@ class MultipleMovingDots < Game
 
     number_of_dots.times do
       x, y = window.random_point
-      dot = Pc.new(x: x, y: y)
+      dot = Npc.new(x: x, y: y)
 
       dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
       logger.info {"dot_size:\t#{dot.size}"}
