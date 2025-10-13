@@ -5,8 +5,8 @@
 # Even when disabled, there is an optical illusion effect from different
 # size and shade of the dots. Set very low pulse_rate value for glittery,
 # Star Trek teleporter effect.
-class StarField < Game
-  include Pulsing
+class StarField < Simple2DDemo::Game
+  include Simple2DDemo::Pulsing
 
   MAX_DOT_SIZE = 3
   MIN_DOT_SIZE = 1
@@ -41,7 +41,7 @@ class StarField < Game
     n.times do
       dot_size = rng.triangular(min_dot_size, mode_dot_size, max_dot_size).round
       x, y = window.random_point
-      dot = Background.new(
+      dot = Simple2DDemo::Background.new(
         x: x,
         y: y,
         size: dot_size

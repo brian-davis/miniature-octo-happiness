@@ -2,12 +2,12 @@
 
 # Demonstrate basic Ruby2D operation. Animate many cursor objects,
 # dots, each with its own visual pulse effect, movement and boundary behavior.
-class MultipleMovingDots < Game
-  include Pulsing
+class MultipleMovingDots < Simple2DDemo::Game
+  include Simple2DDemo::Pulsing
 
-  include Moving
-  include Colliding
-  include Bounding # after Moving, Colliding
+  include Simple2DDemo::Moving
+  include Simple2DDemo::Colliding
+  include Simple2DDemo::Bounding # after Moving, Colliding
 
   DEFAULT_DOTS = 2
   DEFAULT_DOT_SIZE = 4
@@ -29,14 +29,14 @@ class MultipleMovingDots < Game
 
     number_of_dots.times do
       x, y = window.random_point
-      dot = Npc.new(x: x, y: y)
+      dot = Simple2DDemo::Npc.new(x: x, y: y)
 
       dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
       logger.info {"dot_size:\t#{dot.size}"}
 
       cpv = config["pulse_values"]
       dot.pulse_values = if cpv.nil? || cpv.empty?
-        Gradients.random_color_gradient
+        Simple2DDemo::Gradients.random_color_gradient
       else
         cpv
       end
@@ -48,7 +48,8 @@ class MultipleMovingDots < Game
       dot.rate = config["dot_rate"]
       dot.controlled = true
 
-      launch_dir = Moveable.valid_directions.sample
+      # REFACTOR
+      launch_dir = Simple2DDemo::Moveable.valid_directions.sample
       dot.start!(launch_dir)
 
       self.moving_objects.push(dot)

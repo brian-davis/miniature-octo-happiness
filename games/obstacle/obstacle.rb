@@ -4,15 +4,13 @@
 # a dot, with a visual pulse effect which can be moved around the window
 # using directional keys, with configurable behavior at window borders.
 # A wall object in in the middle of the map, blocking some movements.
-class Obstacle < Game
-  include Pulsing
-  include Steering
-
-  include Moving
-  include Colliding
-
-  include Bounding # after Moving, Colliding
-  include Blocking
+class Obstacle < Simple2DDemo::Game
+  include Simple2DDemo::Pulsing
+  include Simple2DDemo::Moving
+  include Simple2DDemo::Steering
+  include Simple2DDemo::Colliding
+  include Simple2DDemo::Bounding
+  include Simple2DDemo::Blocking
 
   DEFAULT_DOT_SIZE = 4
 
@@ -31,14 +29,14 @@ class Obstacle < Game
 
   def set_dot
     x, y = window.center
-    @dot = Pc.new(x: x, y: y)
+    @dot = Simple2DDemo::Pc.new(x: x, y: y)
 
     @dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
     logger.info {"dot_size:\t#{@dot.size}"}
 
     cpv = config["pulse_values"]
     @dot.pulse_values = if cpv.nil? || cpv.empty?
-      Gradients.random_color_gradient
+      Simple2DDemo::Gradients.random_color_gradient
     else
       cpv
     end
@@ -54,7 +52,7 @@ class Obstacle < Game
   end
 
   def set_obstacle
-    @wall = Wall.new(
+    @wall = Simple2DDemo::Wall.new(
       x: @dot.x - 100,
       y: @dot.y - @dot.width,
 
@@ -68,7 +66,7 @@ class Obstacle < Game
 
     cpv = config["pulse_values"]
     @wall.pulse_values = if cpv.nil? || cpv.empty?
-      Gradients.random_color_gradient
+      Simple2DDemo::Gradients.random_color_gradient
     else
       cpv
     end
