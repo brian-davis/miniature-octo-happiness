@@ -2,11 +2,6 @@
 
 require "simple-random"
 
-require_relative "../lib/concerns/pulsing"            # Pulseable, Pulsing
-require_relative "../lib/concerns/pulseable"
-
-require_relative "../lib/decorators/ruby2d_decorator" # window.random_point
-
 class Ruby2D::Square
   include Pulseable
 end

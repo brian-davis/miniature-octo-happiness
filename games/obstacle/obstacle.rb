@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 # REFACTOR: standard bundled gem structure
-
-require_relative "../lib/concerns/pulsing"
-require_relative "../lib/concerns/pulseable"
-
-require_relative "../lib/concerns/steering"
-
-require_relative "../lib/concerns/moveable"
-require_relative "../lib/concerns/moving"
-
-require_relative "../lib/concerns/collidable"
-require_relative "../lib/concerns/colliding"
-
-require_relative "../lib/concerns/boundable"
-require_relative "../lib/concerns/bounding"
-
-require_relative "../lib/concerns/blockable"
-require_relative "../lib/concerns/blocking"
-
 class Ruby2D::Square
   include Pulseable
   include Moveable

@@ -5,6 +5,23 @@ require "logger"
 
 require_relative "decorators/ruby2d_decorator"
 
+require_relative "../lib/concerns/pulsing"
+require_relative "../lib/concerns/pulseable"
+
+require_relative "../lib/concerns/steering"
+
+require_relative "../lib/concerns/moveable"
+require_relative "../lib/concerns/moving"
+
+require_relative "../lib/concerns/collidable"
+require_relative "../lib/concerns/colliding"
+
+require_relative "../lib/concerns/boundable"
+require_relative "../lib/concerns/bounding"
+
+require_relative "../lib/concerns/blockable"
+require_relative "../lib/concerns/blocking"
+
 # Game class is an OOP container for using Ruby2d concerns
 # in a standard way for making simple games à la Pong or Pacman.
 # Avoid putting all Ruby2d calls and/or game logic in `main` context.

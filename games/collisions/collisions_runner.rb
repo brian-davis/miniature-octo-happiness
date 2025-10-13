@@ -3,9 +3,8 @@
 require "json"
 
 # REFACTOR: standard bundled gem structure
-require_relative "../lib/game"
+require_relative "../../lib/game"
 
-# TODO make a "game_runner" file, take arg for name of game, e.g. "star_field"
 self_filename = __FILE__.split('/').last.split('.').first
 klass_filename = self_filename.match(/\A(.+)_runner/)[1]
 require_relative "./#{klass_filename}"
@@ -15,7 +14,7 @@ config_json = JSON.load_file(config_filepath) if File.exist?(config_filepath)
 _flag, log_level = ARGV.detect { |arg| arg.match?(/--log-level/) }&.split("=")
 args = [config_json, log_level].compact
 
-moving_dot = MultipleMovingDots.new(*args)
-moving_dot.run
+collisions = Collisions.new(*args)
+collisions.run
 
-# $ ruby moving_dot_runner.rb --log-level=info
+# $ ruby collisions_runner.rb --log-level=info

@@ -6,4 +6,8 @@ Available demo projects: `star_field`, `moving_dot`, `multiple_moving_dots`
 
 From project root, run the `runner` file for a project:
 
-`$ ruby multiple_moving_dots/multiple_moving_dots_runner.rb`
+```
+$ ruby game_runner.rb star_field --log-level=info
+```
+
+Current game options are: `collisions`, `moving_dot`, `multiple_moving_dots`, `obstacle`, `star_field`.
