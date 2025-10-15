@@ -10,7 +10,7 @@ class Obstacle < Simple2DDemo::Game
   include Simple2DDemo::Steering
   include Simple2DDemo::Colliding
   include Simple2DDemo::Bounding
-  include Simple2DDemo::Blocking
+  # include Simple2DDemo::Blocking # REFACTOR
 
   DEFAULT_DOT_SIZE = 4
 
@@ -22,7 +22,6 @@ class Obstacle < Simple2DDemo::Game
 
     set_dot
     set_obstacle
-    set_update
   end
 
   private
@@ -43,12 +42,16 @@ class Obstacle < Simple2DDemo::Game
 
     @dot.pulse_rate = config["pulse_rate"]
     @dot.color = @dot.pulse_cycle.next
-    self.pulse_items.push(@dot)
+    self.pulsing_objects.push(@dot)
 
     @dot.rate = config["dot_rate"]
     @dot.controlled = true
 
+    @dot.collidable_mode = :reflect
+    self.game_enders.push(@dot)
+
     self.moving_objects.push(@dot)
+    self.colliding_objects.push(@dot)
   end
 
   def set_obstacle
@@ -72,32 +75,10 @@ class Obstacle < Simple2DDemo::Game
     end
 
     @wall.color = @dot.pulse_cycle.next
+    self.pulsing_objects.push(@wall)
 
+    @wall.collidable_mode = :block
 
-    self.pulse_items.push(@wall)
-
-    @wall.blocking_mode = :block_reflect
-    self.blocks.push(@wall)
-  end
-
-  # If config["bounding_mode"] is "eliminate"
-  def game_over?
-    self.moving_objects.empty?
-  end
-
-  def end_game!
-    puts "GAME OVER"
-    exit
-  end
-
-  # REFACTOR: move up to Game superclass?
-  def set_update
-    window.update do
-      self.pulsing_update.call  # Pulsing
-      self.bounding_update.call # before moving
-      self.blocking_update.call # before moving
-      self.moving_update.call
-      end_game! if game_over?
-    end
+    self.colliding_objects.push(@wall)
   end
 end

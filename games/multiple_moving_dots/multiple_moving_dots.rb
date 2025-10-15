@@ -6,7 +6,7 @@ class MultipleMovingDots < Simple2DDemo::Game
   include Simple2DDemo::Pulsing
 
   include Simple2DDemo::Moving
-  include Simple2DDemo::Colliding
+  # include Simple2DDemo::Colliding
   include Simple2DDemo::Bounding # after Moving, Colliding
 
   DEFAULT_DOTS = 2
@@ -43,7 +43,7 @@ class MultipleMovingDots < Simple2DDemo::Game
 
       dot.pulse_rate = config["pulse_rate"]
       dot.color = dot.pulse_cycle.next
-      self.pulse_items.push(dot)
+      self.pulsing_objects.push(dot)
 
       dot.rate = config["dot_rate"]
       dot.controlled = true
@@ -53,28 +53,6 @@ class MultipleMovingDots < Simple2DDemo::Game
       dot.start!(launch_dir)
 
       self.moving_objects.push(dot)
-    end
-  end
-
-  # config["bounding_mode"] is "eliminate"
-  #
-  def game_over?
-    self.moving_objects.empty?
-  end
-
-  def end_game!
-    puts "GAME OVER"
-    exit
-  end
-
-  # REFACTOR: move up to Game class
-  def set_update
-    window.update do
-      self.pulsing_update.call  # Pulsing
-
-      self.bounding_update.call # before moving
-      self.moving_update.call
-      end_game! if game_over?
     end
   end
 end

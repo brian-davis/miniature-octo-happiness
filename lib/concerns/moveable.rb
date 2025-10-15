@@ -5,21 +5,29 @@ module Simple2DDemo
   # such as a Square.
   #
   # Movable spelling?
-  module Moveable
-    attr_accessor :x_movement, :y_movement, :last_direction,  :controlled, :rate
+  module Moveable # Simple2DDemo::Moveable
+    attr_accessor :x_movement, :y_movement, :last_direction,  :controlled, :rate, :controller
 
-    # FEATURE REQUEST: Develop alternate system based on radial heading degrees.
-    VALID_DIRECTIONS = [
-      :left, :right, :up, :down,
-      :up_left, :up_right, :down_left, :down_right,
-      :stop
-    ]
+    # FEATURE: Develop alternate system based on radial heading degrees.
+    CARDINALS = [:left, :right, :up, :down]
+    DIAGONALS = [:up_left, :up_right, :down_left, :down_right]
+    VALID_DIRECTIONS = CARDINALS + DIAGONALS
+
+    # Called by Games which set many dots moving in various directions.
     def self.valid_directions(include_stop = false)
       if include_stop
         VALID_DIRECTIONS
       else
         VALID_DIRECTIONS - [:stop]
       end
+    end
+
+    def self.cardinals
+      CARDINALS
+    end
+
+    def self.diagonals
+      DIAGONALS
     end
 
     def initialize(**args)
@@ -52,7 +60,11 @@ module Simple2DDemo
       direction!(:stop)
     end
 
-    alias_method :direction!, def start!(input_direction = nil, tag = nil)
+    def movement_direction
+      :last_direction if moving?
+    end
+
+    alias_method :direction!, def start!(input_direction = nil)
       new_direction = if input_direction == :toggle_start
         stopped? ? self.last_direction : :stop
       else

@@ -4,41 +4,11 @@ require "ruby2d"
 require "logger"
 
 ### Master requirements. Assume everything is always loaded. ###
+# IMPROVE
 
-# Decorators
-
-require_relative "../lib/decorators/ruby2d_decorator"
-
-# Helpers
-
-require "simple-random"
-require_relative "../lib/helpers/gradients.rb"
-
-# Concerns
-
-require_relative "../lib/concerns/pulsing"
-require_relative "../lib/concerns/pulseable"
-
-require_relative "../lib/concerns/steering"
-
-require_relative "../lib/concerns/moveable"
-require_relative "../lib/concerns/moving"
-
-require_relative "../lib/concerns/collidable"
-require_relative "../lib/concerns/colliding"
-
-require_relative "../lib/concerns/boundable"
-require_relative "../lib/concerns/bounding"
-
-require_relative "../lib/concerns/blockable"
-require_relative "../lib/concerns/blocking"
-
-# Components
-
-require_relative "../lib/components/npc"
-require_relative "../lib/components/pc"
-require_relative "../lib/components/wall"
-require_relative "../lib/components/background"
+["decorators", "helpers", "concerns", "components"].each do |subdir|
+  Dir.glob(File.join(__dir__, subdir,'*.rb')).each { |file| require file }
+end
 
 ### Module ###
 
@@ -52,14 +22,20 @@ module Simple2DDemo
   #   moving_dot = Game.new(config_json)
   #   moving_dot.run
   class Game
-    attr_reader :config, :logger, :window
+    attr_reader :config, :window
+    attr_accessor :update_actions, :remove_observables, :game_enders
 
     def initialize(config = {}, log_level = :warn)
       @window = Ruby2D::Window # singleton
+      @update_actions = []
+      @remove_observables = [:game_enders]
+      @game_enders = []
 
       set_logger(log_level)
       configure(config)
       register_inputs()
+
+      set_update
     end
 
     def run
@@ -67,10 +43,20 @@ module Simple2DDemo
       window.show() # launch GUI app
     end
 
-    private
+    def logger
+      $logger
+    end
+
+    def remove_object(obj)
+      logger.debug { "remove_object: #{obj}" }
+      obj.remove # removes from display only
+      remove_observables.each do |attr|
+        send(attr).delete(obj) # removes from Game memory
+      end
+    end
 
     def set_logger(log_level)
-      @logger = Logger.new(STDERR) # attr_reader :logger
+      $logger = Logger.new(STDERR) # attr_reader :logger
       level_class = {
         "unknown" => Logger::UNKNOWN,
         "fatal"   => Logger::FATAL,
@@ -132,6 +118,22 @@ module Simple2DDemo
 
     def window_title
       @window_title ||= config["window_title"]&.strip&.upcase
+    end
+
+    def set_update
+      window.update do
+        end_game! if game_over?
+        self.update_actions.each { |method_name| self.send(method_name) }
+      end
+    end
+
+    def game_over?
+      !config["non_ending"] && game_enders.length == 0
+    end
+
+    def end_game!
+      STDOUT.puts "GAME OVER"
+      exit(0)
     end
   end
 end

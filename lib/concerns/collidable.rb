@@ -2,25 +2,40 @@
 
 module Simple2DDemo
   module Collidable
-    # attr_accessor :mark_collided
-    # REFACTOR: use this for bounding edge detection
+    # IMRPOVE: clearer names
+    COLLIDABLE_MODES = [
+      :reflect,
+      :stop,
+      :eliminate,
+      :block
 
-    def xi
-      x.to_i
+      # :collide_physics # FEATURE
+    ]
+
+    def self.included(base)
+      self::COLLIDABLE_MODES += base::COLLIDABLE_MODES
     end
 
-    def yi
-      y.to_i
+    attr_accessor :eliminate_callback
+    attr_reader :collidable_mode
+
+    def collidable_mode=(mode)
+      unless COLLIDABLE_MODES.include?(mode)
+        msg = "Invalid colliding_mode #{mode}. Options are: #{COLLIDABLE_MODES.join(', ')}"
+        raise ArgumentError, msg
+      end
+      @collidable_mode = mode
     end
 
     # The window-coordinates real-estate for the object
     def static_xy_coverage
       [
         [xi, yi], # top-left corner
-        [(xi + size), (yi + size)], # bottom-right corner
+        [(xi + width), (yi + height)], # bottom-right corner
       ]
     end
 
+    # IMPROVE: use native x1, x2, x3, x4
     def xy_coverage
       return static_xy_coverage if stopped? # moveable.rb
 
@@ -29,42 +44,42 @@ module Simple2DDemo
       when :up
         [
           [xi, (yi - rate)], # top-left corner
-          [(xi + size), (yi - rate + size)], # bottom-right corner
+          [(xi + width), (yi - rate + height)], # bottom-right corner
         ]
       when :down
         [
           [xi, (yi + rate)], # top-left corner
-          [(xi + size), (yi + rate + size)], # bottom-right corner
+          [(xi + width), (yi + rate + height)], # bottom-right corner
         ]
       when :left
         [
           [(xi - rate), yi], # top-left corner
-          [(xi - rate + size), (yi + size)], # bottom-right corner
+          [(xi - rate + width), (yi + height)], # bottom-right corner
         ]
       when :right
         [
           [(xi + rate), yi], # top-left corner
-          [(xi + rate + size), (yi + size)], # bottom-right corner
+          [(xi + rate + width), (yi + height)], # bottom-right corner
         ]
       when :up_left
         [
           [(xi - rate), (yi - rate)], # top-left corner
-          [(xi - rate + size), (yi - rate + size)], # bottom-right corner
+          [(xi - rate + width), (yi - rate + height)], # bottom-right corner
         ]
       when :down_left
         [
           [(xi - rate), (yi + rate)], # top-left corner
-          [(xi - rate + size), (yi + rate + size)], # bottom-right corner
+          [(xi - rate + width), (yi + rate + height)], # bottom-right corner
         ]
       when :up_right
         [
           [(xi + rate), (yi - rate)], # top-left corner
-          [(xi + + rate + size), (yi - rate + size)], # bottom-right corner
+          [(xi + + rate + width), (yi - rate + height)], # bottom-right corner
         ]
       when :down_right
         [
           [(xi + rate), (yi + rate)], # top-left corner
-          [(xi + rate + size), (yi + rate + size)], # bottom-right corner
+          [(xi + rate + width), (yi + rate + height)], # bottom-right corner
         ]
       else
         static_xy_coverage
@@ -73,7 +88,7 @@ module Simple2DDemo
 
     def collides?(other)
       self_cov = self.xy_coverage
-      other_cov = other.xy_coverage # duck-typing in blockable.rb
+      other_cov = other.xy_coverage
 
       self_x = (self_cov[0][0]..self_cov[1][0])
       self_y = (self_cov[0][1]..self_cov[1][1])
@@ -84,27 +99,59 @@ module Simple2DDemo
       self_x.overlap?(other_x) && self_y.overlap?(other_y)
     end
 
-    def collide_stop!(other)
-      self.stop!
-      other.stop!
-      collision_reposition!(self, other)
+    def collide!(other)
+      $logger.debug { "collide! self:#{self} other:#{other}" }
+      # only aler self state, not other state (it will handle that itself)
+      self.send(self.collidable_mode, other)
     end
 
-    def collide_reflect!(other)
-      collide_stop!(other)
+    def stop(_other)
+      self.stop!
+    end
 
-      # swap directions
-      self_dir, other_dir = other.last_direction, self.last_direction
-      self.direction!(self_dir)
-      other.direction!(other_dir)
+    def reflect(other)
+      _edge, reflection = BlockReflection.get(self, other) # /helpers
+      $logger.debug { "shuttle reflect: #{_edge}, #{reflection}" }
+
+      # IMPROVE: Moving dependency here.
+      self.direction!(reflection) if reflection
+    end
+
+    def eliminate(_other)
+      eliminate_callback.call(self)
+    end
+
+    # clumping effect
+    def collide_stop(obj1, obj2)
+      obj1.collide_stop!(obj2)
+    end
+
+    # self is a Wall, do nothing, the wall doesn't move.
+    # other will take care of itself
+    def block(other)
+      $logger.debug { "block" }
+      return
+    end
+
+    #  FEATURE: pool-table logic, with assymetric force, angle, mass
+    def collide_physics
+      raise NotImplementedError, "collide_physics not implemented"
     end
 
     private
 
+    def xi
+      x.to_i
+    end
+
+    def yi
+      y.to_i
+    end
+
+    # Deliberate effect, like Castlevania (Simon is thrown back, actually exploitable)
+    # Shouldn't be necessary to compensate for base collision behavior.
     def collision_reposition!(a, b)
-      # DEBUG: currently disabled, not necessary. Enable as necessary
-      # or as a deliberate effect, like Castlevania (Simon is thrown back, actually exploitable)
-      return
+      raise NotImplementedError, "collision_reposition not implemented"
     end
   end
 end

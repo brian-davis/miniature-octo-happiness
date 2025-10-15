@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "simple-random"
+
 # Produce a field of twinkling stars.
 # Pulse effect simulates atmospheric distortion. Disable for outer-space view.
 # Even when disabled, there is an optical illusion effect from different
@@ -15,7 +17,6 @@ class StarField < Simple2DDemo::Game
   def initialize(*args)
     super(*args)
     set_dots
-    set_update
   end
 
   private
@@ -61,13 +62,7 @@ class StarField < Simple2DDemo::Game
       rand(10).times { dot.pulse_cycle.next }
       dot.color = dot.pulse_cycle.next
 
-      pulse_items.push(dot)
-    end
-  end
-
-  def set_update
-    window.update do
-      self.pulsing_update.call # Pulsing
+      pulsing_objects.push(dot)
     end
   end
 end

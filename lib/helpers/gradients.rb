@@ -12,7 +12,7 @@ class Array
   end
 end
 
-
+# IMPROVE: naming
 module Simple2DDemo
   # Easily built color gradient array values to feed into Pulseable
   module Gradients
@@ -37,6 +37,12 @@ module Simple2DDemo
     }
 
     class << self
+      def random_color
+        _cc = COMMON_COLOR_CODES.dup
+        _cc.delete("black")
+        _cc.values.sample
+      end
+
       # >> Gradiens.int_gradient(20, 5,4)
       # => [20, 15, 10, 5]
       # >> Gradiens.int_gradient(10, 100)

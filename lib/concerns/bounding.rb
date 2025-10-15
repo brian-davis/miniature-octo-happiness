@@ -1,26 +1,21 @@
 # frozen_string_literal: true
 module Simple2DDemo
+  # FIX: Avoid mutual dependencies between Moving, Colliding, Bounding
   module Bounding
     BOUNDING_MODES = [:unbounded, :wrap, :reflect, :stop, :eliminate]
 
-    def self.included(base)
-      attr_reader :bounding_update, :bounding_mode
-      attr_accessor :edge_size
+    # def self.included(base)
+    # end
 
-      def initialize(*args)
-        super(*args)
+    attr_reader :bounding_update, :bounding_mode
+    attr_accessor :edge_size
 
-        # REFACTOR:try to avoid hard dependencies
-        unless self.class.ancestors.map(&:name).include?("Simple2DDemo::Moving") &&
-               self.class.ancestors.map(&:name).include?("Simple2DDemo::Colliding") &&
-               self.window # Game
-          raise ArgumentError, "Bounding depends on Moving and Colliding"
-        end
+    def initialize(*args)
+      super(*args)
+      self.update_actions.push(:bound_all)
 
-        @bounding_mode = BOUNDING_MODES.first # reset after init
-        @bounding_update = method(:bound_all)
-        @edge_size = 0 # reset after init
-      end
+      @bounding_mode = BOUNDING_MODES.first # reset after init
+      @edge_size = 0 # reset after init
     end
 
     def bounding_mode=(mode)
@@ -41,7 +36,7 @@ module Simple2DDemo
       end
     end
 
-    # FEATURE REQUEST: allow for differing edge behavior
+    # FEATURE: allow for differing edge behavior
     # e.g. Arkanoid top/left/right edges bouce, bottom edge eliminates
     def out_of_bounds?(obj)
       top_left, bottom_right = obj.xy_coverage # Collidable
@@ -111,6 +106,7 @@ module Simple2DDemo
 
     # Bouncing behavior, accounting for strike angle, like Pong.
     # Hit the wall going left, now you are going right.
+    # IMPROVE: Duplicate logic between this and BlockReflection
     def reflect(obj, edge)
       logger.debug { "reflect" }
       reflection = reflection_match(obj, edge)

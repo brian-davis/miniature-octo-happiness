@@ -5,27 +5,21 @@ module Simple2DDemo
   # Add movement functionality to a Game subclass.
   # Separate concern from DirectionalInput, this handles placing
   # and tracking objects across the window, not handling keyboard input.
+  #
+  # FIX: Avoid mutual dependencies between Moving, Colliding, Bounding
   module Moving
-    def self.included(base)
-      attr_accessor :moving_update
-      attr_reader :moving_objects
-    end
+    # def self.included(base)
+    # end
+
+    attr_accessor :moving_update
+    attr_reader :moving_objects
 
     def initialize(*args)
       super(*args)
+      self.update_actions.push(:move_all)
 
       @moving_objects = []
-      @moving_update = method(:move_all)
-    end
-
-    def controlled_objects
-      @controlled_objects ||= moving_objects.select { |mo| mo.controlled }
-    end
-
-    def remove_object(obj)
-      logger.debug { "remove_object: #{obj}" }
-      obj.remove and # removes from display only
-      self.moving_objects.delete(obj)
+      remove_observables.push(:moving_objects)
     end
 
     private

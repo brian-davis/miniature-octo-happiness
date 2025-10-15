@@ -38,26 +38,28 @@ module Simple2DDemo
 
     attr_accessor :last_steering_input
 
-    def self.included(base)
-      def initialize(*args)
-        # if base is e.g. MovingDot < GAME, then:
-        # Game -> this -> MovingDot
-        super(*args) # window
+    def initialize(*args)
+      # if base is e.g. MovingDot < GAME, then:
+      # Game -> this -> MovingDot
+      super(*args) # window
 
-        # REFACTOR:try to avoid hard dependencies
-        unless self.class.ancestors.map(&:name).include?("Simple2DDemo::Moving") &&
-               self.window # Game
-          raise ArgumentError, "Steering depends on Moving"
-        end
-
-        set_directional_inputs
+      # REFACTOR:try to avoid hard dependencies
+      unless self.class.ancestors.map(&:name).include?("Simple2DDemo::Moving") &&
+              self.window # Game
+        raise ArgumentError, "Steering depends on Moving"
       end
+
+      set_directional_inputs
+    end
+
+    def controlled_objects
+      @controlled_objects ||= moving_objects.select { |mo| mo.controlled } # Moving
     end
 
     private
 
     def set_directional_inputs
-      # FEATURE REQUEST: option for standard game-controller style, must hold down to move,
+      # FEATURE: option for standard game-controller style, must hold down to move,
       # stop on key_up.
       window.on :key_down do |event|
         logger.debug { event }
@@ -72,7 +74,7 @@ module Simple2DDemo
 
     def direction!
       self.controlled_objects.each do |obj|
-        obj.direction!(self.last_steering_input) # Moving
+        obj.direction!(self.last_steering_input)
       end
     end
   end

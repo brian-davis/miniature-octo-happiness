@@ -13,15 +13,17 @@ module Simple2DDemo
   module Pulseable
     DEFAULT_PULSE_RATE = 30
 
-    # Include into game element, e.g. Ruby2D::Square
-    # Give individual elements their own pulse behaviors.
-    def self.included(base)
-      attr_accessor :pulse_rate, :pulse_values
-    end
+    # # Include into game element, e.g. Ruby2D::Square
+    # # Give individual elements their own pulse behaviors.
+    # def self.included(base)
+    # end
+    attr_accessor :pulse_rate, :pulse_values
 
+    # IMPROVE: move more initialization options here, allow caller
+    # to pass extra args options (work around named arguments)
     def initialize(**args)
       super(**args)
-      self.pulse_values = Gradients.black_white # default, reset after initialization
+      self.pulse_values = Simple2DDemo::Gradients.black_white # default, reset after initialization IMPROVE
     end
 
     def pulse_cycle

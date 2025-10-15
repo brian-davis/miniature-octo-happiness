@@ -6,7 +6,7 @@
   "dot_rate": 2,
   "number_of_dots": 20,
   "pulse_rate": 10,
-
+  "non_ending": true,
   "bounding_mode": "wrap",
 
   "enable_pulse": true,

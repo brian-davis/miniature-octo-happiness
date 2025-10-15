@@ -1,0 +1,12 @@
+{
+  "window_title": "Pong",
+  "window_width": 640,
+  "window_height": 480,
+  "shuttle_size": 10,
+  "shuttle_rate": 4,
+  "paddle_rate": 6,
+  "wall_width": 10,
+  "pulse_rate": 10,
+  "enable_pulse": true,
+  "run_info":"Play ping-pong. Bounce the shuttle between the paddles. The game ends when the shuttle flies off the screen to the left or right. Move the left paddle using 'W' (up) & 'S' (down) and move the right paddles using 'I' (up) and 'K' (down).\n\nPress 'Q' to quit.\n\n"
+}

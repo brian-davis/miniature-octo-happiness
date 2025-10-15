@@ -13,30 +13,32 @@ module Simple2DDemo
     MAX_TICK = 2 ** 63 - 1 # 60 cycles per second
 
     def self.included(base)
-      attr_reader :enable_pulse, :pulsing_update
-      attr_accessor :pulse_items, :pulse_tick
+    end
 
-      def initialize(*args)
-        # if base is e.g. StarField < Game, then:
-        # Game -> this -> StarField
-        super(*args)
-        @enable_pulse = config["enable_pulse"] # Game
-        logger.info {"config enable pulse: #{@enable_pulse}"}
-        @pulse_tick = 0
-        @pulse_items = []
-        @pulsing_update = method(:pulse_all)
-      end
+    attr_reader :enable_pulse, :pulsing_update
+    attr_accessor :pulsing_objects, :pulse_tick
+    def initialize(*args)
+      # if base is e.g. StarField < Game, then:
+      # Game -> this -> StarField
+      super(*args)
+      self.update_actions.push(:pulse_all)
+
+      @enable_pulse = config["enable_pulse"] # Game
+      logger.info {"config enable pulse: #{@enable_pulse}"}
+      @pulse_tick = 0
+      @pulsing_objects = []
+      remove_observables.push(:pulsing_objects)
     end
 
     private
 
     def pulse_all
       return unless enable_pulse
-      pulse_items.each do |pulse_item|
-        if pulse_tick % pulse_item.pulse_rate == 0
+      pulsing_objects.each do |pulsing_object|
+        if pulse_tick % pulsing_object.pulse_rate == 0
           # e.g. Square, with .color method
           # REFACTOR: make this settable
-          pulse_item.color = pulse_item.pulse_cycle.next
+          pulsing_object.color = pulsing_object.pulse_cycle.next
         end
       end
 
