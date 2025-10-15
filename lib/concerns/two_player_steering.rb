@@ -17,6 +17,7 @@ module Simple2DDemo
     }
     STEERING_KEYS_LEFT = STEERING_MAP_LEFT.keys
 
+    # IMPROVE: accomodate 9-key-less keyboards
     STEERING_MAP_RIGHT = {
       "keypad 4" => :left,
       "keypad 6" => :right,

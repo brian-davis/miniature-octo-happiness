@@ -74,7 +74,7 @@ module Simple2DDemo
 
     def direction!
       self.controlled_objects.each do |obj|
-        obj.direction!(self.last_steering_input)
+        obj.direction!(self.last_steering_input) # Moving dependency
       end
     end
   end

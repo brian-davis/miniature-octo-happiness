@@ -10,7 +10,6 @@ class Obstacle < Simple2DDemo::Game
   include Simple2DDemo::Steering
   include Simple2DDemo::Colliding
   include Simple2DDemo::Bounding
-  # include Simple2DDemo::Blocking # REFACTOR
 
   DEFAULT_DOT_SIZE = 4
 

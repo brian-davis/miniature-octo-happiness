@@ -56,7 +56,7 @@ module Simple2DDemo
     end
 
     def set_logger(log_level)
-      $logger = Logger.new(STDERR) # attr_reader :logger
+      $logger = Logger.new(STDERR)
       level_class = {
         "unknown" => Logger::UNKNOWN,
         "fatal"   => Logger::FATAL,

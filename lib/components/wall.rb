@@ -7,12 +7,6 @@ module Simple2DDemo
     include Pulseable
     include Collidable
 
-    # Movable:collide_all duck-type
-    # TODO: necessary?
-    def moving?
-      false
-    end
-
     # A moving object (Cursor, Shuttle, Pc, etc.) triggers the collision in Colliding:collide_all
     # Static wall should bypass this logic
     # This affects wall placement (see e.g. Pong:set_walls): if walls are constantly checking :collides?,
@@ -22,6 +16,7 @@ module Simple2DDemo
       super(other) unless stopped?
     end
 
+    # Movable:collide_all
     def stopped?
       # FEATURE: moving walls
       true

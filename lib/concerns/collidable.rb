@@ -2,7 +2,6 @@
 
 module Simple2DDemo
   module Collidable
-    # IMRPOVE: clearer names
     COLLIDABLE_MODES = [
       :reflect,
       :stop,
@@ -101,7 +100,7 @@ module Simple2DDemo
 
     def collide!(other)
       $logger.debug { "collide! self:#{self} other:#{other}" }
-      # only aler self state, not other state (it will handle that itself)
+      # only alter self state, not other state (it will handle that itself)
       self.send(self.collidable_mode, other)
     end
 
@@ -119,11 +118,6 @@ module Simple2DDemo
 
     def eliminate(_other)
       eliminate_callback.call(self)
-    end
-
-    # clumping effect
-    def collide_stop(obj1, obj2)
-      obj1.collide_stop!(obj2)
     end
 
     # self is a Wall, do nothing, the wall doesn't move.
@@ -148,7 +142,7 @@ module Simple2DDemo
       y.to_i
     end
 
-    # Deliberate effect, like Castlevania (Simon is thrown back, actually exploitable)
+    # FEATURE: Deliberate effect, like Castlevania (Simon is thrown back, actually exploitable)
     # Shouldn't be necessary to compensate for base collision behavior.
     def collision_reposition!(a, b)
       raise NotImplementedError, "collision_reposition not implemented"

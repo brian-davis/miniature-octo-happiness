@@ -8,5 +8,5 @@
   "wall_width": 10,
   "pulse_rate": 10,
   "enable_pulse": true,
-  "run_info":"Play ping-pong. Bounce the shuttle between the paddles. The game ends when the shuttle flies off the screen to the left or right. Move the left paddle using 'W' (up) & 'S' (down) and move the right paddles using 'I' (up) and 'K' (down).\n\nPress 'Q' to quit.\n\n"
+  "run_info":"Pong\n\nPlay ping-pong. Two players control a moving ball with paddles.\nIf it goes past the edge of the window on the left or right, the game ends.\n\nPress the space bar to start.\nPress Q to quit.\nPlayer 1:\n  \"i\": move up\n  \"k\": stop/start\n  \",\": move down\n\nPlayer 2:\n  \"keypad 8\": move up\n  \"keypad 5\": stop/start\n  \"keypad 2\": move down\n"
 }

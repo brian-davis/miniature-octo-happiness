@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Simple2DDemo
-  # FIX: Avoid mutual dependencies between Moving, Colliding, Bounding
+  # IMPROVE: Review, avoid mutual dependencies between Moving, Colliding, Bounding
   module Bounding
     BOUNDING_MODES = [:unbounded, :wrap, :reflect, :stop, :eliminate]
 
@@ -36,8 +36,8 @@ module Simple2DDemo
       end
     end
 
-    # FEATURE: allow for differing edge behavior
-    # e.g. Arkanoid top/left/right edges bouce, bottom edge eliminates
+    # For differing edge behavior (e.g. top, bottom reflect, left, right eliminate)
+    # use walls (e.g. Pong)
     def out_of_bounds?(obj)
       top_left, bottom_right = obj.xy_coverage # Collidable
 

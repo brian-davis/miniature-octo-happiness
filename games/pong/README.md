@@ -1,13 +1,18 @@
 ```
-$ ruby obstacle/obstacle_runner.rb
+Pong
 
-OBSTACLE
+Play ping-pong. Two players control a moving ball with paddles.
+If it goes past the edge of the window on the left or right, the game ends.
 
-This demonstrates interaction of the cursor with an obstacle wall placed in the middle of the board. Try bouncing the cursor against the wall at various points and angles. Move the cursor using 9-key numpad, up/down/left/right arrow keys, or i/k/j/l keys.
-
-Press the space bar to start or stop.
-
+Press the space bar to start.
 Press Q to quit.
+Player 1:
+  "i": move up
+  "k": stop/start
+  ",": move down
 
+Player 2:
+  "keypad 8": move up
+  "keypad 5": stop/start
+  "keypad 2": move down
 ```
-

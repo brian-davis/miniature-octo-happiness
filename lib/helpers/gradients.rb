@@ -38,9 +38,7 @@ module Simple2DDemo
 
     class << self
       def random_color
-        _cc = COMMON_COLOR_CODES.dup
-        _cc.delete("black")
-        _cc.values.sample
+        COMMON_COLOR_CODES.except("black") # OK Ruby 3
       end
 
       # >> Gradiens.int_gradient(20, 5,4)
@@ -59,7 +57,7 @@ module Simple2DDemo
         inermediate_range = ((a + step_size)..(b - step_size))
         intermediate = inermediate_range.step(step_size).to_a
 
-        # kludge e.g. Gradiens.int_gradient(5, 20,9)
+        # kludge e.g. Gradients.int_gradient(5, 20,9)
         # step_size is 1, get too-long result
         until intermediate.length <= n - 2
           intermediate.delete_at(rand(intermediate.length))

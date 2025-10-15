@@ -194,8 +194,4 @@ class Pong < Simple2DDemo::Game
     self.moving_objects.push(@paddle2) # IMPROVE: use initialize
     self.colliding_objects.push(@paddle2)
   end
-
-  def find_shuttle
-    self.moving_objects.detect { |mo| mo.is_a?(Simple2DDemo::Shuttle) }
-  end
 end
