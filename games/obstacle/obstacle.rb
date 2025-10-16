@@ -47,7 +47,6 @@ class Obstacle < Simple2DDemo::Game
     @dot.controlled = true
 
     @dot.collidable_mode = :reflect
-    self.game_enders.push(@dot)
 
     self.moving_objects.push(@dot)
     self.colliding_objects.push(@dot)
@@ -75,9 +74,7 @@ class Obstacle < Simple2DDemo::Game
 
     @wall.color = @dot.pulse_cycle.next
     self.pulsing_objects.push(@wall)
-
     @wall.collidable_mode = :block
-
     self.colliding_objects.push(@wall)
   end
 end

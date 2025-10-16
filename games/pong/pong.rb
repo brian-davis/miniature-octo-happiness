@@ -8,6 +8,7 @@ class Pong < Simple2DDemo::Game
   include Simple2DDemo::TwoPlayerSteering
   include Simple2DDemo::Colliding
   include Simple2DDemo::Bounding
+  include Simple2DDemo::Ending
 
   DEFAULT_PADDLE_COLOR = Simple2DDemo::Gradients::COMMON_COLOR_CODES["white"]
   DEFAULT_PADDLE_HEIGHT = 100
@@ -95,6 +96,7 @@ class Pong < Simple2DDemo::Game
     @shuttle.eliminate_callback = method(:remove_object) # IMPROVE: is there a better way to do this?
 
     self.colliding_objects.push(@shuttle)
+
     self.game_enders.push(@shuttle)
   end
 

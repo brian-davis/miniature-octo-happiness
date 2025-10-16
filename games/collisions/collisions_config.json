@@ -5,11 +5,8 @@
   "dot_size": 20,
   "dot_rate": 4,
   "number_of_dots": 12,
-
   "pulse_rate": 10,
-  "non_ending": true,
   "bounding_mode": "reflect",
-
   "enable_pulse": true,
   "run_info":"No Steering is available here, it is merely an animation. Press Q to quit.\n\n"
 }

@@ -22,14 +22,13 @@ module Simple2DDemo
   #   moving_dot = Game.new(config_json)
   #   moving_dot.run
   class Game
-    attr_reader :config, :window
-    attr_accessor :update_actions, :remove_observables, :game_enders
+    attr_reader   :config, :window
+    attr_accessor :update_actions, :remove_observables
 
     def initialize(config = {}, log_level = :warn)
       @window = Ruby2D::Window # singleton
       @update_actions = []
-      @remove_observables = [:game_enders]
-      @game_enders = []
+      @remove_observables = []
 
       set_logger(log_level)
       configure(config)
@@ -122,18 +121,8 @@ module Simple2DDemo
 
     def set_update
       window.update do
-        end_game! if game_over?
         self.update_actions.each { |method_name| self.send(method_name) }
       end
-    end
-
-    def game_over?
-      !config["non_ending"] && game_enders.length == 0
-    end
-
-    def end_game!
-      STDOUT.puts "GAME OVER"
-      exit(0)
     end
   end
 end

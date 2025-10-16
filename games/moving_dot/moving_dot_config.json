@@ -7,6 +7,5 @@
   "pulse_rate": 10,
   "bounding_mode": "wrap",
   "enable_pulse": true,
-  "non_ending": true,
   "run_info":"Move the cursor using 9-key numpad, up/down/left/right arrow keys, or i/k/j/l keys.\n\nPress the space bar to start or stop.\n\nPress Q to quit.\n\n"
 }
