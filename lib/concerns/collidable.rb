@@ -12,7 +12,9 @@ module Simple2DDemo
     ]
 
     def self.included(base)
-      self::COLLIDABLE_MODES += base::COLLIDABLE_MODES
+      if defined?(base::COLLIDABLE_MODES_EXTEND)
+        self::COLLIDABLE_MODES += base::COLLIDABLE_MODES_EXTEND
+      end
     end
 
     attr_accessor :eliminate_callback
