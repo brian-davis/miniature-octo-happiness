@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+class Array
+  # a =  [
+  #   [320, 240], # top_left
+  #   [330, 250]  # bottom_right
+  # ]
+  # xr, yr = a.square_ranges
+  # puts xr == (320..330) && yr == (240..250)
+  def square_ranges
+    x_r = self[0][0]..self[1][0]
+    y_r = self[0][1]..self[1][1]
+    [x_r, y_r]
+  end
+end
+
 module Simple2DDemo
   module Collidable
     COLLIDABLE_MODES = [
@@ -31,12 +45,13 @@ module Simple2DDemo
     # The window-coordinates real-estate for the object
     def static_xy_coverage
       [
-        [xi, yi], # top-left corner
-        [(xi + width), (yi + height)], # bottom-right corner
+        [x1, y1], # top-left corner
+        [x3, y3], # bottom-right corner
       ]
     end
 
-    # IMPROVE: use native x1, x2, x3, x4
+    # The window-coordinates real-estate for the object,
+    # looking ahead 1 frame and accounting for movement.
     def xy_coverage
       return static_xy_coverage if stopped? # moveable.rb
 
@@ -44,43 +59,43 @@ module Simple2DDemo
       case last_direction
       when :up
         [
-          [xi, (yi - rate)], # top-left corner
-          [(xi + width), (yi - rate + height)], # bottom-right corner
+          [x1, (y1 - rate)], # top-left corner
+          [x3, (y3 - rate)], # bottom-right corner
         ]
       when :down
         [
-          [xi, (yi + rate)], # top-left corner
-          [(xi + width), (yi + rate + height)], # bottom-right corner
+          [x1, y1], # top-left corner
+          [x3, (y3 + rate)], # bottom-right corner
         ]
       when :left
         [
-          [(xi - rate), yi], # top-left corner
-          [(xi - rate + width), (yi + height)], # bottom-right corner
+          [(x1 - rate), y1], # top-left corner
+          [(x3 - rate), y3], # bottom-right corner
         ]
       when :right
         [
-          [(xi + rate), yi], # top-left corner
-          [(xi + rate + width), (yi + height)], # bottom-right corner
+          [(x1 + rate), y1], # top-left corner
+          [(x3 + rate), y3], # bottom-right corner
         ]
       when :up_left
         [
-          [(xi - rate), (yi - rate)], # top-left corner
-          [(xi - rate + width), (yi - rate + height)], # bottom-right corner
+          [(x1 - rate), (y1 - rate)], # top-left corner
+          [(x3 - rate), (y3 - rate)], # bottom-right corner
         ]
       when :down_left
         [
-          [(xi - rate), (yi + rate)], # top-left corner
-          [(xi - rate + width), (yi + rate + height)], # bottom-right corner
+          [(x1 - rate), (y1 + rate)], # top-left corner
+          [(x3 - rate), (y3 + rate)], # bottom-right corner
         ]
       when :up_right
         [
-          [(xi + rate), (yi - rate)], # top-left corner
-          [(xi + + rate + width), (yi - rate + height)], # bottom-right corner
+          [(x1 + rate), (y1 - rate)], # top-left corner
+          [(x3 + rate), (y3 - rate)], # bottom-right corner
         ]
       when :down_right
         [
-          [(xi + rate), (yi + rate)], # top-left corner
-          [(xi + rate + width), (yi + rate + height)], # bottom-right corner
+          [(x1 + rate), (y1 + rate)], # top-left corner
+          [(x3 + rate), (y3 + rate)], # bottom-right corner
         ]
       else
         static_xy_coverage
@@ -88,20 +103,18 @@ module Simple2DDemo
     end
 
     def collides?(other)
-      self_cov = self.xy_coverage
-      other_cov = other.xy_coverage
+      self_cov = self.xy_coverage   # moving
+      other_cov = other.xy_coverage # static/moving
 
-      self_x = (self_cov[0][0]..self_cov[1][0])
-      self_y = (self_cov[0][1]..self_cov[1][1])
+      self_x_range,  self_y_range  = self_cov.square_ranges
+      other_x_range, other_y_range = other_cov.square_ranges
 
-      other_x = (other_cov[0][0]..other_cov[1][0])
-      other_y = (other_cov[0][1]..other_cov[1][1])
-
-      self_x.overlap?(other_x) && self_y.overlap?(other_y)
+      self_x_range.overlap?(other_x_range) &&
+      self_y_range.overlap?(other_y_range)
     end
 
     def collide!(other)
-      $logger.debug { "collide! self:#{self} other:#{other}" }
+      $logger.debug { "collide! self:#{self&.xy_coverage} other:#{other&.xy_coverage}" }
       # only alter self state, not other state (it will handle that itself)
       self.send(self.collidable_mode, other)
     end
@@ -132,22 +145,6 @@ module Simple2DDemo
     #  FEATURE: pool-table logic, with assymetric force, angle, mass
     def collide_physics
       raise NotImplementedError, "collide_physics not implemented"
-    end
-
-    private
-
-    def xi
-      x.to_i
-    end
-
-    def yi
-      y.to_i
-    end
-
-    # FEATURE: Deliberate effect, like Castlevania (Simon is thrown back, actually exploitable)
-    # Shouldn't be necessary to compensate for base collision behavior.
-    def collision_reposition!(a, b)
-      raise NotImplementedError, "collision_reposition not implemented"
     end
   end
 end

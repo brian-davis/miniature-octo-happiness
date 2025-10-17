@@ -3,8 +3,7 @@
 # IMPROVE: Don't inherit from Rectangle.
 module Simple2DDemo
   class Paddle < Ruby2D::Rectangle
-    COLLIDABLE_MODES_EXTEND = [:pong_paddle]
-
+    COLLIDABLE_MODES_EXTEND = [:pong_paddle] # IMPROVE: prepend
     include Pulseable
     include Moveable
     include Collidable

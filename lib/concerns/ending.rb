@@ -13,8 +13,7 @@ module Simple2DDemo
       super(*args)
       self.game_enders = []
       self.remove_observables.push(:game_enders) # Game
-
-       self.update_actions.push(:end_game?)
+      self.update_actions.push(:end_game?)
     end
 
     private

@@ -96,7 +96,6 @@ class Pong < Simple2DDemo::Game
     @shuttle.eliminate_callback = method(:remove_object) # IMPROVE: is there a better way to do this?
 
     self.colliding_objects.push(@shuttle)
-
     self.game_enders.push(@shuttle)
   end
 
@@ -113,7 +112,7 @@ class Pong < Simple2DDemo::Game
 
     @top_left_wall = Simple2DDemo::Wall.new(
       x: 0,
-      y: @top_wall.height, # FIX: overlap error
+      y: @top_wall.height,
       width: wall_width,
       height: paddle_height,
       color: wall_color
@@ -123,7 +122,7 @@ class Pong < Simple2DDemo::Game
 
     @top_right_wall = Simple2DDemo::Wall.new(
       x: window.width - wall_width,
-      y: @top_wall.height, # FIX: overlap error
+      y: @top_wall.height,
       width: wall_width,
       height: paddle_height,
       color: wall_color
