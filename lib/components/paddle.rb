@@ -1,12 +1,13 @@
 # Control the Pong game. Only moves up or down.
-# Collission behavior is similar to Wall.
+# Collision behavior is similar to Wall.
 # IMPROVE: Don't inherit from Rectangle.
 module Simple2DDemo
   class Paddle < Ruby2D::Rectangle
-    COLLIDABLE_MODES_EXTEND = [:pong_paddle] # IMPROVE: prepend
     include Pulseable
     include Moveable
-    include Collidable
+
+    prepend Collidable
+    COLLIDABLE_MODES.push(:pong_paddle) # must be `prepend`
 
     attr_accessor :player_number
 
@@ -15,7 +16,7 @@ module Simple2DDemo
       self.collidable_mode = :pong_paddle
     end
 
-    # Override Movable
+    # Override Movable (must be `include`)
     def x_movement
       0
     end
@@ -23,7 +24,6 @@ module Simple2DDemo
     def pong_paddle(other)
       $logger.debug { "pong_paddle self: #{self}, other: #{other}"}
       if self.moving? && other.collidable_mode == :block
-        # self.moving? && other.is_a?(Simple2DDemo::Wall)
         reflect(other)
       else
         block(other)

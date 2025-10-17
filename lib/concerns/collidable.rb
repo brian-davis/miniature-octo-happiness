@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 
-class Array
-  # a =  [
-  #   [320, 240], # top_left
-  #   [330, 250]  # bottom_right
-  # ]
-  # xr, yr = a.square_ranges
-  # puts xr == (320..330) && yr == (240..250)
-  def square_ranges
-    x_r = self[0][0]..self[1][0]
-    y_r = self[0][1]..self[1][1]
-    [x_r, y_r]
-  end
-end
-
 module Simple2DDemo
   module Collidable
     COLLIDABLE_MODES = [
@@ -21,15 +7,8 @@ module Simple2DDemo
       :stop,
       :eliminate,
       :block
-
       # :collide_physics # FEATURE
     ]
-
-    def self.included(base)
-      if defined?(base::COLLIDABLE_MODES_EXTEND)
-        self::COLLIDABLE_MODES += base::COLLIDABLE_MODES_EXTEND
-      end
-    end
 
     attr_accessor :eliminate_callback
     attr_reader :collidable_mode
@@ -105,12 +84,7 @@ module Simple2DDemo
     def collides?(other)
       self_cov = self.xy_coverage   # moving
       other_cov = other.xy_coverage # static/moving
-
-      self_x_range,  self_y_range  = self_cov.square_ranges
-      other_x_range, other_y_range = other_cov.square_ranges
-
-      self_x_range.overlap?(other_x_range) &&
-      self_y_range.overlap?(other_y_range)
+      SquarePosition.overlap?(self_cov, other_cov)
     end
 
     def collide!(other)
