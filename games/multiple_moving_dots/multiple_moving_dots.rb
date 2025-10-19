@@ -14,12 +14,8 @@ class MultipleMovingDots < Simple2DDemo::Game
 
   def initialize(*args)
     super(*args)
-
-    config_val = config["bounding_mode"]&.to_sym
-    self.bounding_mode = config_val if config_val
-
+    self.bounding_mode = config["bounding_mode"]&.to_sym
     set_dots
-    set_update
   end
 
   private
@@ -29,10 +25,9 @@ class MultipleMovingDots < Simple2DDemo::Game
 
     number_of_dots.times do
       x, y = window.random_point
-      dot = Simple2DDemo::Npc.new(x: x, y: y)
-
+      dot = Simple2DDemo::Trails.new(x: x, y: y)
       dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
-      logger.info {"dot_size:\t#{dot.size}"}
+      logger.info {"dot.size:\t#{dot.size}"}
 
       cpv = config["pulse_values"]
       dot.pulse_values = if cpv.nil? || cpv.empty?
@@ -40,13 +35,15 @@ class MultipleMovingDots < Simple2DDemo::Game
       else
         cpv
       end
+      logger.info {"dot.pulse_values:\t#{dot.pulse_values}"}
 
       dot.pulse_rate = config["pulse_rate"]
+      logger.info {"dot.pulse_rate:\t#{dot.pulse_rate}"}
       dot.color = dot.pulse_cycle.next
       self.pulsing_objects.push(dot)
 
       dot.rate = config["dot_rate"]
-      dot.controlled = true
+      logger.info {"dot.rate:\t#{dot.rate}"}
 
       # REFACTOR
       launch_dir = Simple2DDemo::Moveable.valid_directions.sample

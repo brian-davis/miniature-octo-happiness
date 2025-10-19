@@ -1,12 +1,9 @@
 module Simple2DDemo
   # Moving objects in Game window which are not under user control.
-  # IMPROVE: don't inherit from Square
-  class Npc < Ruby2D::Square
+  class Npc < Ruby2D::Square # IMPROVE: don't inherit from Square
     include Pulseable
     include Moveable
     include Collidable
-
-    attr_accessor :type
 
     def initialize(**args)
       @type = args.delete(:type)
