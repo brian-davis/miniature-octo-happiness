@@ -1,0 +1,15 @@
+{
+  "window_title": "Trails",
+  "window_width": 640,
+  "window_height": 480,
+  "dot_size": 10,
+  "dot_rate": 2,
+  "number_of_dots": 6,
+  "pulse_rate": 10,
+  "bounding_mode": "wrap",
+  "enable_pulse": true,
+  "enable_trail": true,
+  "trail_density": 1,
+  "trail_length": 8,
+  "run_info":"No Steering is available here, it is merely an animation. Press Q to quit.\n\n"
+}

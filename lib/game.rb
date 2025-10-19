@@ -22,13 +22,19 @@ module Simple2DDemo
   #   moving_dot = Game.new(config_json)
   #   moving_dot.run
   class Game
+    # no Integer::MAX in newer rubies, but try to prevent memory overflow
+    # https://stackoverflow.com/a/60828820
+    # https://stackoverflow.com/a/43040560
+    MAX_TICK = 2 ** 63 - 1 # 60 cycles per second
+
     attr_reader   :config, :window
-    attr_accessor :update_actions, :remove_observables
+    attr_accessor :update_actions, :remove_observables, :master_tick
 
     def initialize(config = {}, log_level = :warn)
       @window = Ruby2D::Window # singleton
       @update_actions = []
       @remove_observables = []
+      @master_tick = 0
 
       set_logger(log_level)
       configure(config)
@@ -122,7 +128,16 @@ module Simple2DDemo
     def set_update
       window.update do
         self.update_actions.each { |method_name| self.send(method_name) }
+        tick!
       end
+    end
+
+    private
+
+    # Components hook into :master_tick to control rate of updates.
+    def tick!
+      self.master_tick = 0 if self.master_tick >= MAX_TICK
+      self.master_tick += 1
     end
   end
 end

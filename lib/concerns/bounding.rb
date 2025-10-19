@@ -39,7 +39,9 @@ module Simple2DDemo
     # For differing edge behavior (e.g. top, bottom reflect, left, right eliminate)
     # use walls (e.g. Pong)
     def out_of_bounds?(obj)
-      top_left, bottom_right = obj.xy_coverage # Collidable
+
+      # IMPROVE: Bounding/Collidable dependency inversion
+      top_left, bottom_right = obj.xy_coverage
 
       return :top_edge    if top_left[1] <= edge_size
       return :right_edge  if bottom_right[0] >= window_width - edge_size

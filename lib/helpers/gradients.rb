@@ -17,6 +17,7 @@ module Simple2DDemo
   # Easily built color gradient array values to feed into Pulseable
   module Gradients
     # https://htmlcolorcodes.com/
+    # IMPROVE: use Ruby2D keyword colors: https://www.ruby2d.com/learn/colors/
     COMMON_COLOR_CODES = {
       "white"   => "#ffffff",
       "silver"  => "#c0c0c0",
@@ -36,9 +37,19 @@ module Simple2DDemo
       "purple"  => "#800080"
     }
 
+    RUBY2D_COLORS = %w(
+      navy blue aqua teal olive green lime
+      yellow orange red brown fuchsia purple
+      maroon white silver gray black
+    )
+
     class << self
       def random_color
-        COMMON_COLOR_CODES.except("black") # OK Ruby 3
+        COMMON_COLOR_CODES.except("black").values.sample # :except OK Ruby 3
+      end
+
+      def random_ruby2d_color
+        (RUBY2D_COLORS - ["black"]).sample # :except OK Ruby 3
       end
 
       # >> Gradiens.int_gradient(20, 5,4)
