@@ -9,7 +9,6 @@ module Simple2DDemo
     include Trailable
 
     def initialize(**args)
-      @type = args.delete(:type)
       super(**args)
     end
 

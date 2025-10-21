@@ -6,7 +6,6 @@ module Simple2DDemo
     include Collidable
 
     def initialize(**args)
-      @type = args.delete(:type)
       super(**args)
     end
   end
