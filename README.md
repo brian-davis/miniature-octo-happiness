@@ -10,5 +10,5 @@ $ ruby game_runner.rb collisions
 
 Current options:
 * Component demos/tests: `moving_dot`, `obstacle`
-* Screensavers:  `collisions`, `multiple_moving_dots`, `star_field`, `shooting_star`.
+* Screensavers:  `collisions`, `multiple_moving_dots`, `star_field`, `shooting_star`, `eruption`
 * Games: `pong`. Yes, Pong!
