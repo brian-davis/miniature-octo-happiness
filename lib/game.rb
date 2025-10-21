@@ -138,5 +138,10 @@ module Simple2DDemo
       self.master_tick = 0 if self.master_tick >= MAX_TICK
       self.master_tick += 1
     end
+
+    # REFACTOR: use this helper in all :update_actions
+    def meter?(n)
+      master_tick % n  == 0
+    end
   end
 end
