@@ -1,0 +1,8 @@
+{
+  "window_title": "Io Eruption",
+  "window_width": 640,
+  "window_height": 360,
+  "run_info":"Animation of eruption on Io, a volcanically active moon of Jupiter. Press Q to quit.\n\n",
+  "particle_spawn_rate": 6,
+  "particle_movement_rate": 3
+}
