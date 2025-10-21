@@ -79,11 +79,10 @@ module Simple2DDemo
 
     def configure(config_json)
       @config = config_json # attr_reader :config
-
       window.set(
         title:  window_title,
         width:  config["window_width"],
-        height: config["window_hieght"]
+        height: config["window_height"]
       )
 
       logger.info { "window title:    #{window_title}" }
