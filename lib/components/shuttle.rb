@@ -3,7 +3,6 @@ module Simple2DDemo
   class Shuttle < Simple2DDemo::Npc
     def initialize(**args)
       super(**args)
-      @type = :shuttle # DEBUG
     end
   end
 end
