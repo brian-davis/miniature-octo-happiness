@@ -33,7 +33,7 @@ module Simple2DDemo
       @trailed_objects = []
 
       @trail_length = config["trail_length"] || DEFAULT_TRAIL_LENGTH
-      logger.info {"trail_length #{trail_length}"}
+      logger.info {"@trail_length #{@trail_length}"}
 
       remove_observables.push(:trailing_objects)
     end
