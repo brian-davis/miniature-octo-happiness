@@ -13,7 +13,7 @@ config_json = JSON.load_file(config_filepath) if File.exist?(config_filepath)
 _flag, log_level = ARGV.detect { |arg| arg.match?(/--log-level/) }&.split("=")
 args = [config_json, log_level].compact
 
-trails = Tracers.new(*args)
-trails.run
+shooting_stars = Tracers.new(*args)
+shooting_stars.run
 
-# $ ruby trails_runner.rb --log-level=info
+# $ ruby shooting_stars_runner.rb --log-level=info

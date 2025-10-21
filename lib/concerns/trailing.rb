@@ -6,7 +6,7 @@ module Simple2DDemo
     # include into Game subclass (with .window object)
 
     DEFAULT_TRAIL_LENGTH = 4
-    MAX_TRAIL_TICKS = 1000
+    MAX_TRAIL_TICKS = 60
 
     def self.included(base)
       unless base.ancestors.map(&:name).include?("Simple2DDemo::Game")
@@ -54,11 +54,8 @@ module Simple2DDemo
           trailed_object.fade!
         end
 
-        if master_tick % trailed_object.trail_length == 0 ||
-           master_tick - trailed_object.initial_tick >= MAX_TRAIL_TICKS
-
-          trailed_object.remove()
-          trailed_objects.delete(trailed_object)
+        if master_tick - trailed_object.initial_tick >= MAX_TRAIL_TICKS
+          remove_object(trailed_object)
         end
       end
     end
