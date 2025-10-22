@@ -31,6 +31,8 @@ module Simple2DDemo
     end
 
     def initialize(**args)
+      @rate = args.delete(:rate)
+
       super(**args)
 
       @x_movement = 0

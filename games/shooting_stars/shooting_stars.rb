@@ -11,42 +11,56 @@ class Tracers < Simple2DDemo::Game
   DEFAULT_DOTS = 2
   DEFAULT_DOT_SIZE = 4
 
+  attr_reader :dot_size, :dot_rate, :number_of_dots,
+              :trail_length, :trail_interval
+
   def initialize(*args)
     super(*args)
     self.bounding_mode = config["bounding_mode"]&.to_sym
+
+    @number_of_dots = config["number_of_dots"] || DEFAULT_DOTS
+
+    # all the same
+    @dot_size       = config["dot_size"] || DEFAULT_DOT_SIZE
+    @dot_rate       = config["dot_rate"]
+
+    @trail_length   = config["trail_length"]
+    @trail_interval = config["trail_interval"]
+
+    logger.info {"bounding_mode:\t#{bounding_mode}"}
+
+    logger.info {"number_of_dots:\t#{number_of_dots}"}
+
+    logger.info {"dot_size:\t#{dot_size}"}
+    logger.info {"dot_rate:\t#{dot_rate}"}
+
+    logger.info {"trail_length:\t#{trail_length}"}
+    logger.info {"trail_interval:\t#{trail_interval}"}
+
+
     set_dots
   end
 
   private
 
   def set_dots
-    number_of_dots = config["number_of_dots"] || DEFAULT_DOTS
-
-    # all the same
-    trail_density = config["trail_density"]
-    logger.info { "trail_density:\t#{trail_density}" }
-    trail_length = config["trail_length"]
-    logger.info { "trail_length:\t#{trail_length}" }
-
     number_of_dots.times do
       x, y = window.random_point
-      dot = Simple2DDemo::ShootingStar.new(x: x, y: y)
-      dot.size = config["dot_size"] || DEFAULT_DOT_SIZE
-      logger.info {"dot.size:\t#{dot.size}"}
-
-      dot.color = Simple2DDemo::Trailable.random_trail_color
-
-      dot.rate = config["dot_rate"]
-      logger.info {"dot.rate:\t#{dot.rate}"}
+      dot = Simple2DDemo::ShootingStar.new(
+        x: x,
+        y: y,
+        size: dot_size,
+        enable_trail: self.enable_trail,
+        meter: self.method(:meter?),
+        rate: dot_rate,
+        trail_length: trail_length,
+        trail_interval: trail_interval
+      )
 
       launch_dir = Simple2DDemo::Moveable.valid_directions.sample
       dot.start!(launch_dir)
 
       self.moving_objects.push(dot)
-      dot.trail_density = trail_density
-      dot.trail_length = trail_length
-
-      self.trailing_objects.push(dot)
     end
   end
 end
