@@ -1,0 +1,10 @@
+{
+  "window_title": "Tiles",
+  "window_width": 640,
+  "window_height": 480,
+  "tile_size": 32,
+  "pulse_rate": 4,
+  "enable_pulse": true,
+  "stripe_pattern": "diagonal",
+  "run_info":"A demonstration of using large background tiles with pulsing color effects.\n Configure 'stripe_pattern' to 'vertical', 'horizontal', 'diagonal', or 'scramble'.\nPress Q to quit.\n\n"
+}
