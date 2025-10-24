@@ -5,7 +5,7 @@ Enjoying the [Ruby2D](https://www.ruby2d.com/learn/colors/) gem. Making little 2
 From project root, run the `runner` with an option for the specific demo:
 
 ```
-$ ruby game_runner.rb collisions
+$ ruby game_runner.rb collisions --log-level=info
 ```
 
 Current options:
