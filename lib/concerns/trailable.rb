@@ -2,6 +2,7 @@
 
 module Simple2DDemo
   # Add trailing (tracer) functionality to an element within Game subclass.
+  # REFACTOR; DRY, consolidate with line-based solution in Eruption, Radiant
   module Trailable
     TRAIL_MAX_LENGTH = 10
     TRAIL_INTERVAL = 10

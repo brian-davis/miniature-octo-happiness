@@ -9,7 +9,6 @@ require_relative("components/particle")
 class Eruption < Simple2DDemo::Game
   # include Simple2DDemo::Pulsing
   include Simple2DDemo::Moving
-  include Simple2DDemo::Bounding # after Moving, Colliding
 
   BACKGROUND_IMAGE = "images/tvashtar_plume.png"
   DEFAULT_DOT_SIZE = 4
@@ -22,7 +21,6 @@ class Eruption < Simple2DDemo::Game
 
   def initialize(*args)
     super(*args)
-    self.bounding_mode = :eliminate
     @background = Image.new(File.expand_path(File.join(__dir__, BACKGROUND_IMAGE)))
     @origin = [320, 300]
     @gravity = GRAVITY
@@ -51,9 +49,10 @@ class Eruption < Simple2DDemo::Game
     end
   end
 
+  # REFACTOR: this duplicates Bounding
   def out_of_bounds?(e)
     e.x < 0 || e.x > window_width || e.y < 0 ||
-    e.y > origin[1]
+    e.y > origin[1] # the planet surface
   end
 
   def animate_particle

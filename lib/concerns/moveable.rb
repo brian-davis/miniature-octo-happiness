@@ -5,10 +5,12 @@ module Simple2DDemo
   # such as a Square.
   #
   # Movable spelling?
+
+  # For simple u/d/r//ur/rl/dr/dl movement
+  # Otherwise, see Radial
   module Moveable # Simple2DDemo::Moveable
     attr_accessor :x_movement, :y_movement, :last_direction,  :controlled, :rate, :controller
 
-    # FEATURE: Develop alternate system based on radial heading degrees.
     CARDINALS = [:left, :right, :up, :down]
     DIAGONALS = [:up_left, :up_right, :down_left, :down_right]
     VALID_DIRECTIONS = CARDINALS + DIAGONALS

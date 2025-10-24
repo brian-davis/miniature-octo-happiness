@@ -13,11 +13,10 @@ module Simple2DDemo
 
     attr_accessor :pulse_rate, :pulse_values
 
-    # IMPROVE: move more initialization options here, allow caller
-    # to pass extra args options (work around named arguments)
     def initialize(**args)
+      pulse_arg = args.delete(:pulse_values)
+      @pulse_values = pulse_arg || Simple2DDemo::Gradients.black_white
       super(**args)
-      self.pulse_values = Simple2DDemo::Gradients.black_white # default, reset after initialization IMPROVE
     end
 
     def pulse_cycle

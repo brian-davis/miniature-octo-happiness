@@ -1,0 +1,12 @@
+{
+  "window_title": "Radiant Meteor Shower",
+  "window_width": 640,
+  "window_height": 360,
+
+  "meteor_size":        4,
+  "meteor_spawn_rate":  30,
+  "meteor_color":       "yellow",
+  "meteor_travel_rate": 3,
+
+  "run_info":"Animation of meteors radiating from a point in space. Press Q to quit.\n\n"
+}
